@@ -1,0 +1,185 @@
+#! /usr/bin/env ruby
+
+=begin
+
+Determine duration of media files, passed as arguments.
+Shells out to ffmpeg(1).
+
+Created: 16 Apr 2013
+Author: Victor Deryagin <vderyagin@gmail.com>
+
+=end
+
+require 'open3'
+require 'optparse'
+
+options = {
+  verbose: false,
+}
+
+parser = OptionParser.new do |opts|
+  name = File.basename($PROGRAM_NAME)
+
+  opts.banner =  "Usage:\t#{name} [options] FILENAME..."
+
+  opts.on('-v', '--[no-]verbose',
+          'Display duration of each file separately,',
+          'as well as total duration') do |sep|
+    options[:verbose] = sep
+  end
+
+  opts.on '-h', '--help', 'Display this message' do
+    puts opts
+    exit
+  end
+end
+
+class Duration
+  def initialize
+    @state = Hash.new(0)
+  end
+
+  [
+    :seconds,
+    :minutes,
+    :hours,
+    :days,
+    :weeks,
+  ].each do |span|
+    define_method span do
+      @state[span]
+    end
+
+    define_method "add_#{span}" do |amount|
+      @state[span] += amount.to_i
+      normalize
+      self
+    end
+  end
+
+  def normalize
+    if @state[:seconds] >= 60
+      @state[:minutes] += seconds / 60
+      @state[:seconds] %= 60
+    end
+
+    if @state[:minutes] >= 60
+      @state[:hours] += minutes / 60
+      @state[:minutes] %= 60
+    end
+
+    if @state[:hours] >= 24
+      @state[:days] += hours / 24
+      @state[:hours] %= 24
+    end
+
+    if @state[:days] >= 7
+      @state[:weeks] += days / 7
+      @state[:days] %= 7
+    end
+
+    self
+  end
+
+  def ==(other)
+    [
+      seconds == other.seconds,
+      minutes == other.minutes,
+      hours == other.hours,
+      days == other.days,
+      weeks == other.weeks,
+    ].all?
+  end
+  protected :'=='
+
+  def empty?
+    [
+      :seconds,
+      :minutes,
+      :hours,
+      :days,
+      :weeks,
+    ].all? { |span| @state[span].zero? }
+  end
+
+  def to_s
+    return '0 seconds.' if empty?
+
+    summary = []
+
+    unless weeks.zero?
+      str = "#{weeks} week"
+      str << 's' if weeks > 1
+      summary << str
+    end
+
+    unless days.zero?
+      str = "#{days} day"
+      str << 's' if days > 1
+      summary << str
+    end
+
+    unless hours.zero?
+      str = "#{hours} hour"
+      str << 's' if hours > 1
+      summary << str
+    end
+
+    unless minutes.zero?
+      str = "#{minutes} minute"
+      str << 's' if minutes > 1
+      summary << str
+    end
+
+    unless seconds.zero?
+      str = "#{seconds} second"
+      str << 's' if seconds > 1
+      summary << str
+    end
+
+    summary.join(', ') + '.'
+  end
+
+  def +(other)
+    self.class.new
+      .add_seconds(seconds + other.seconds)
+      .add_minutes(minutes + other.minutes)
+      .add_hours(hours + other.hours)
+      .add_days(days + other.days)
+      .add_weeks(weeks + other.weeks)
+  end
+end
+
+def duration(media_file)
+  ffmpeg_io = IO.popen(['ffmpeg', '-i', media_file, err: [:child, :out]])
+  /^\s*Duration: (?<h>\d+):(?<m>\d+):(?<s>[\d\.]+), / =~ ffmpeg_io.read
+
+  Duration.new
+    .add_hours(h.to_i)
+    .add_minutes(m.to_i)
+    .add_seconds(s.to_f)
+end
+
+if __FILE__ == $PROGRAM_NAME
+  ARGV << '--help' if ARGV.empty?
+  parser.parse!
+
+  total = Duration.new
+
+  ARGV.each do |f|
+    current = duration(f)
+
+    next if current.empty?
+
+    total += current
+
+    if options[:verbose]
+      h = current.hours
+      m = current.minutes.to_s.rjust(2, '0')
+      s = current.seconds.round.to_s.rjust(2, '0')
+      puts "#{h}:#{m}:#{s} - #{f}"
+    end
+  end
+
+  puts "Total duration: #{total}"
+end
