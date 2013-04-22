@@ -1,0 +1,73 @@
+#! /usr/bin/env ruby
+
+=begin
+
+Convert audio files to sped-up mp3.
+Shells out to ffmpeg(1).
+
+Created: 18 Apr 2013
+Author: Victor Deryagin <vderyagin@gmail.com>
+
+=end
+
+require 'optparse'
+require 'pathname'
+
+options = {
+  speed: 1.33,
+  dir: Pathname.new(Dir.pwd),
+}
+
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: #{File.basename($PROGRAM_NAME)} [options] FILE..."
+
+  opts.on('-s SPEED', '--speed SPEED', Float,
+          "Specify speedup factor (0.5..2.0, default is #{options[:speed]})"
+          ) do |speed|
+    options[:speed] = speed
+  end
+
+  opts.on('-D DIR', '--output-directory DIR',
+          'Directory to put converted files in, default is "."') do |dir|
+    dir = Pathname.new(File.expand_path(dir))
+
+    unless dir.directory?
+      raise ArgumentError, "#{dir} is not a valid directory"
+    end
+
+    options[:dir] = dir
+  end
+
+  opts.on '-h', '--help', 'Display this message' do
+    puts opts
+    exit
+  end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  ARGV << '--help' if ARGV.empty?
+  parser.parse!
+
+  if ARGV.empty?
+    warn 'No files to process, exiting'
+    exit 1
+  end
+
+  ARGV.each do |file|
+    old = Pathname.new(file)
+    ext = old.extname
+
+    new = options[:dir] + "#{old.basename(ext)}-#{options[:speed]}x.mp3"
+
+    cmd = []
+
+    cmd << 'ffmpeg'
+    cmd << '-i' << old.to_s
+    cmd << '-vn'                            # no video
+    cmd << '-acodec' << 'mp3'
+    cmd << '-filter:a' << "atempo=#{options[:speed]}"
+    cmd << new.to_s
+
+    system(*cmd)
+  end
+end
