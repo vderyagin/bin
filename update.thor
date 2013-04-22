@@ -4,8 +4,9 @@ class Update < Thor
   BIN_DIR = File.expand_path('..', __FILE__)
 
   SCRIPTS = {
-    lein: 'https://raw.github.com/technomancy/leiningen/stable/bin/lein',
-    hub: 'http://defunkt.io/hub/standalone',
+    'git-wip' => 'https://raw.github.com/bartman/git-wip/master/git-wip',
+    'hub' => 'http://defunkt.io/hub/standalone',
+    'lein' => 'https://raw.github.com/technomancy/leiningen/stable/bin/lein',
   }
 
   desc 'all', 'update all scripts'
