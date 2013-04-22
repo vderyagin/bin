@@ -1,0 +1,110 @@
+#! /usr/bin/env ruby
+
+=begin
+
+Clone gists through ssh.
+
+Running tests: ruby -rminitest/autorun /path/to/this/file
+
+Created: 19 Jan 2013
+Author: Victor Deryagin <vderyagin@gmail.com>
+
+=end
+
+GISTS_PATH = File.expand_path('~/repos/gists/')
+
+def clone_gist(url)
+  Dir.chdir GISTS_PATH do
+    system 'git', 'clone', url
+  end
+end
+
+def get_ssh_url(str)
+  case str
+  when /\A\h+\z/
+    "git@gist.github.com:#{str}.git"
+  when /\Agit@gist\.github\.com:\h+\.git\z/
+    str
+  when /\Ahttps:\/\/gist\.github\.com\/(?:\w+\/)?(\h+)(?:\.git)?\z/
+    "git@gist.github.com:#{$1}.git"
+  else
+    fail "can not parse gist address: #{str}"
+  end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  ARGV.map(&method(:get_ssh_url)).each(&method(:clone_gist))
+end
+
+describe 'get_ssh_url' do
+  describe 'public gists' do
+    it 'works with plain numbers' do
+      num = '12345'
+      get_ssh_url(num).must_equal "git@gist.github.com:#{num}.git"
+    end
+
+    it 'works with web page urls' do
+      num = '327423'
+      web_page_url = "https://gist.github.com/#{num}"
+      ssh_url = "git@gist.github.com:#{num}.git"
+      get_ssh_url(web_page_url).must_equal ssh_url
+    end
+
+    it 'works with web page urls containing username' do
+      num = '327423'
+      web_page_url = "https://gist.github.com/someUser/#{num}"
+      ssh_url = "git@gist.github.com:#{num}.git"
+      get_ssh_url(web_page_url).must_equal ssh_url
+    end
+
+    it 'works with https clone urls' do
+      num = '895798'
+      https_url = "https://gist.github.com/#{num}.git"
+      ssh_url = "git@gist.github.com:#{num}.git"
+      get_ssh_url(https_url).must_equal ssh_url
+    end
+
+    it 'works with https ssh urls' do
+      ssh_url = 'git@gist.github.com:343242.git'
+      get_ssh_url(ssh_url).must_equal ssh_url
+    end
+
+    it 'raises exception when argument format is not recognized' do
+      -> {
+        get_ssh_url 'some invalid string'
+      }.must_raise RuntimeError
+    end
+  end
+
+  describe 'private gists' do
+    it 'works with hex strings' do
+      id = '12abc345'
+      get_ssh_url(id).must_equal "git@gist.github.com:#{id}.git"
+    end
+
+    it 'works with web page urls' do
+      id = '3a2b7c4d2e3f'
+      web_page_url = "https://gist.github.com/#{id}"
+      ssh_url = "git@gist.github.com:#{id}.git"
+      get_ssh_url(web_page_url).must_equal ssh_url
+    end
+
+    it 'works with https clone urls' do
+      id = '895a7b9e8'
+      https_url = "https://gist.github.com/#{id}.git"
+      ssh_url = "git@gist.github.com:#{id}.git"
+      get_ssh_url(https_url).must_equal ssh_url
+    end
+
+    it 'works with https ssh urls' do
+      ssh_url = 'git@gist.github.com:34b3c2d42.git'
+      get_ssh_url(ssh_url).must_equal ssh_url
+    end
+
+    it 'raises exception when argument format is not recognized' do
+      -> {
+        get_ssh_url 'abcdefg'
+      }.must_raise RuntimeError
+    end
+  end
+end if defined? MiniTest
