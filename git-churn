@@ -1,0 +1,11 @@
+#! /usr/bin/env ruby
+
+IO.popen('git log --name-only --pretty=format:""')
+  .readlines
+  .map(&:chomp)
+  .reject(&:empty?)
+  .select { |file| File.exists?(File.expand_path(file, ENV['GIT_WORK_TREE'])) }
+  .each_with_object(Hash.new(0)) { |file, changes| changes[file] += 1 }
+  .to_a
+  .sort_by(&:last)
+  .reverse_each { |file, churn| puts "#{churn.to_s.ljust 4} #{file}" }
