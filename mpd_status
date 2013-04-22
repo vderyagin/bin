@@ -1,0 +1,50 @@
+#! /usr/bin/env ruby
+
+#
+# Show current mpd(1) status via libnotify.
+# Shells out to mpc(1) and notify-send(1).
+#
+# Created: 03 Jul 2012
+# Author: Victor Deryagin <vderyagin@gmail.com>
+#
+
+require 'open3'
+
+MPC_FORMAT = [
+  :artist,
+  :album,
+  :title,
+  :date
+].map { |s| "%#{s}%" }.join("\n")
+
+
+output, status = Open3.capture2e("mpc --format '#{MPC_FORMAT}'")
+
+unless status == 0
+  `notify-send Stopped`
+  exit
+end
+
+artist, album, title, date, rest = output.split "\n"
+
+%r{
+^
+\[(?<state>playing|paused)\]
+\s+
+[\#\d/]+
+\s+
+(?<time>.*)
+$
+}x =~ rest
+
+
+notification = "#{artist} - #{title}\n#{album} (#{date})\n#{time}"
+
+icon = File.expand_path "~/.icons/#{state}.png"
+
+command = []
+command << 'notify-send'
+command << notification
+command << "--icon=#{icon}" if File.exists? icon
+
+IO.popen command
