@@ -12,11 +12,14 @@ Author: Victor Deryagin <vderyagin@gmail.com>
 GIT_DIR = ENV['GIT_WORK_TREE']
 CMD = ['git', 'log', '--name-only', '--pretty=format:""']
 
-IO.popen(CMD).each_line.with_object([]) { |line, files|
+changes = IO.popen(CMD).each_line.with_object(Hash.new(0)) { |line, files|
   next if line == "\n"
   line.chomp!
-  files << line if File.file?(File.expand_path(line, GIT_DIR))
-}.each_with_object(Hash.new(0)) { |file, changes| changes[file] += 1 }
-  .to_a
-  .sort_by(&:last)
-  .reverse_each { |file, churn| printf "%-4d %s\n", churn, file }
+  files[line] += 1 if File.file?(File.expand_path(line, GIT_DIR))
+}.to_a.sort_by(&:last)
+
+num_field_size = changes.last.last.to_s.size
+
+changes.reverse_each do |file, churn|
+  printf "%-#{num_field_size}d %s\n", churn, file
+end
