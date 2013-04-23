@@ -1,0 +1,46 @@
+#! /usr/bin/env ruby
+
+=begin
+
+Update specified version control repositories.
+Shells out to git(1), hg(1), cvs(1), darcs(1), svn(1), bzr(1) as needed.
+
+Created: 23 Apr 2013
+Author: Victor Deryagin <vderyagin@gmail.com>
+
+=end
+
+require 'pathname'
+
+UPDATE_COMMANDS = {
+  bazaar:     ['bzr', 'pull'],
+  cvs:        ['cvs', 'update'],
+  darcs:      ['darcs', 'pull'],
+  git:        ['git', 'pull'],
+  mercurial:  ['hg', 'pull', '-u'],
+  subversion: ['svn', 'update'],
+}
+
+
+def sync_repo(directory)
+  test = ->(subdir, dir) { (dir + subdir).directory? }
+
+  repo_type =
+    case Pathname.new(File.expand_path(directory))
+    when test.curry['.bzr']   then :bazaar
+    when test.curry['CVS']    then :cvs
+    when test.curry['_darcs'] then :darcs
+    when test.curry['.git']   then :git
+    when test.curry['.hg']    then :mercurial
+    when test.curry['.svn']   then :subversion
+    else fail "#{directory} is not a valid repository."
+    end
+
+  Dir.chdir directory do
+    printf "in %s:\n", Dir.pwd
+    system(*UPDATE_COMMANDS[repo_type])
+  end
+end
+
+
+ARGV.each(&method(:sync_repo)) if __FILE__ == $PROGRAM_NAME
