@@ -1,3 +1,4 @@
+require 'English'
 require 'fileutils'
 require 'open-uri'
 require 'tmpdir'
@@ -84,6 +85,13 @@ class Bin < Thor
         FileUtils.rm_r 'dzen'
       end
     end
+  end
+
+  desc 'unrar_free', 'make symlink unrar-gpl -> unrar-free'
+  def unrar_free
+    unrar_gpl = `which unrar-gpl`.chomp
+    warn 'no unrar-gpl executable found' unless $CHILD_STATUS.success?
+    FileUtils.ln_sf unrar_gpl, File.expand_path('../unrar-free', __FILE__)
   end
 
   no_commands do
