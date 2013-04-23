@@ -1,12 +1,14 @@
 #! /usr/bin/env ruby
 
-#
-# Show current mpd(1) status via libnotify.
-# Shells out to mpc(1) and notify-send(1).
-#
-# Created: 03 Jul 2012
-# Author: Victor Deryagin <vderyagin@gmail.com>
-#
+=begin
+
+Show current mpd(1) status via libnotify.
+Shells out to mpc(1) and notify-send(1).
+
+Created: 03 Jul 2012
+Author: Victor Deryagin <vderyagin@gmail.com>
+
+=end
 
 require 'open3'
 
