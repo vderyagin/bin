@@ -6,6 +6,14 @@ IO.popen('git log --name-only --pretty=format:""')
   .reject(&:empty?)
   .select { |file| File.exists?(File.expand_path(file, ENV['GIT_WORK_TREE'])) }
   .each_with_object(Hash.new(0)) { |file, changes| changes[file] += 1 }
+=begin
+
+Output list of files in git repository sorted by times changed.
+
+Created: 7 Nov 2012
+Author: Victor Deryagin <vderyagin@gmail.com>
+
+=end
   .to_a
   .sort_by(&:last)
   .reverse_each { |file, churn| puts "#{churn.to_s.ljust 4} #{file}" }
