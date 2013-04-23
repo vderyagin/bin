@@ -38,7 +38,7 @@ class Bin < Thor
   def sbt
     url = 'http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch//0.12.3/sbt-launch.jar'
 
-    lib_dir = File.expand_path('../lib', __FILE__)
+    lib_dir = File.expand_path('lib', BIN_DIR)
     FileUtils.rm_f File.expand_path('sbt-launch.jar', lib_dir)
     Dir.mkdir lib_dir unless File.directory?(lib_dir)
     system 'wget', '--directory-prefix', 'lib', url
@@ -57,7 +57,7 @@ class Bin < Thor
 
         Dir.chdir 'skb' do
           system 'make', 'skb'
-          binary = File.expand_path('../skb', __FILE__)
+          binary = File.expand_path('skb', BIN_DIR)
 
           FileUtils.rm_f binary
           FileUtils.cp 'skb', binary
@@ -76,7 +76,7 @@ class Bin < Thor
 
         Dir.chdir 'dzen' do
           system 'make'
-          binary = File.expand_path('../dzen2', __FILE__)
+          binary = File.expand_path('dzen2', BIN_DIR)
 
           FileUtils.rm_f binary
           FileUtils.cp 'dzen2', binary
@@ -91,7 +91,7 @@ class Bin < Thor
   def unrar_free
     unrar_gpl = `which unrar-gpl`.chomp
     warn 'no unrar-gpl executable found' unless $CHILD_STATUS.success?
-    FileUtils.ln_sf unrar_gpl, File.expand_path('../unrar-free', __FILE__)
+    FileUtils.ln_sf unrar_gpl, File.expand_path('unrar-free', BIN_DIR)
   end
 
   no_commands do
