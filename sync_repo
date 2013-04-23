@@ -17,10 +17,7 @@ def has_dir(dir)
 end
 
 if __FILE__ == $PROGRAM_NAME
-  if ARGV.empty?
-    puts "Usage: #{File.basename(__FILE__)} DIRECTORY..."
-    exit
-  end
+  puts "Usage: #{File.basename(__FILE__)} DIRECTORY..." if ARGV.empty?
 
   ARGV.each do |directory|
     Dir.chdir directory do
