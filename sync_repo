@@ -12,7 +12,9 @@ Author: Victor Deryagin <vderyagin@gmail.com>
 
 require 'pathname'
 
-test = ->(subdir, dir) { (dir + subdir).directory? }
+def has_dir(dir)
+  ->(d, pdir) { (pdir + d).directory? }.curry[dir]
+end
 
 if __FILE__ == $PROGRAM_NAME
   if ARGV.empty?
@@ -23,13 +25,13 @@ if __FILE__ == $PROGRAM_NAME
   ARGV.each do |directory|
     Dir.chdir directory do
       command =
-        case Pathname.new(File.expand_path(Dir.pwd))
-        when test.curry['.bzr']   then ['bzr', 'pull']
-        when test.curry['CVS']    then ['cvs', 'update']
-        when test.curry['_darcs'] then ['darcs', 'pull']
-        when test.curry['.git']   then ['git', 'pull']
-        when test.curry['.hg']    then ['hg', 'pull', '-u']
-        when test.curry['.svn']   then ['svn', 'update']
+        case Pathname.new(Dir.pwd)
+        when has_dir('.bzr')   then ['bzr', 'pull']
+        when has_dir('CVS')    then ['cvs', 'update']
+        when has_dir('_darcs') then ['darcs', 'pull']
+        when has_dir('.git')   then ['git', 'pull']
+        when has_dir('.hg')    then ['hg', 'pull', '-u']
+        when has_dir('.svn')   then ['svn', 'update']
         else
           warn "#{directory} is not a valid repository."
           exit 1
