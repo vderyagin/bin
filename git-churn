@@ -1,11 +1,5 @@
 #! /usr/bin/env ruby
 
-IO.popen('git log --name-only --pretty=format:""')
-  .readlines
-  .map(&:chomp)
-  .reject(&:empty?)
-  .select { |file| File.exists?(File.expand_path(file, ENV['GIT_WORK_TREE'])) }
-  .each_with_object(Hash.new(0)) { |file, changes| changes[file] += 1 }
 =begin
 
 Output list of files in git repository sorted by times changed.
@@ -14,6 +8,15 @@ Created: 7 Nov 2012
 Author: Victor Deryagin <vderyagin@gmail.com>
 
 =end
+
+GIT_DIR = ENV['GIT_WORK_TREE']
+CMD = ['git', 'log', '--name-only', '--pretty=format:""']
+
+IO.popen(CMD).each_line.with_object([]) { |line, files|
+  next if line == "\n"
+  line.chomp!
+  files << line if File.file?(File.expand_path(line, GIT_DIR))
+}.each_with_object(Hash.new(0)) { |file, changes| changes[file] += 1 }
   .to_a
   .sort_by(&:last)
-  .reverse_each { |file, churn| puts "#{churn.to_s.ljust 4} #{file}" }
+  .reverse_each { |file, churn| printf "%-4d %s\n", churn, file }
