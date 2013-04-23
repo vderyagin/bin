@@ -30,7 +30,7 @@ if __FILE__ == $PROGRAM_NAME
         when has_dir('CVS')    then ['cvs', 'update']
         when has_dir('_darcs') then ['darcs', 'pull']
         when has_dir('.git')   then ['git', 'pull']
-        when has_dir('.hg')    then ['hg', 'pull', '-u']
+        when has_dir('.hg')    then ['hg', 'pull', '--update']
         when has_dir('.svn')   then ['svn', 'update']
         else
           warn "#{directory} is not a valid repository."
