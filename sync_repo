@@ -12,35 +12,31 @@ Author: Victor Deryagin <vderyagin@gmail.com>
 
 require 'pathname'
 
-UPDATE_COMMANDS = {
-  bazaar:     ['bzr', 'pull'],
-  cvs:        ['cvs', 'update'],
-  darcs:      ['darcs', 'pull'],
-  git:        ['git', 'pull'],
-  mercurial:  ['hg', 'pull', '-u'],
-  subversion: ['svn', 'update'],
-}
+test = ->(subdir, dir) { (dir + subdir).directory? }
 
+if __FILE__ == $PROGRAM_NAME
+  if ARGV.empty?
+    puts "Usage: #{File.basename(__FILE__)} DIRECTORY..."
+    exit
+  end
 
-def sync_repo(directory)
-  test = ->(subdir, dir) { (dir + subdir).directory? }
+  ARGV.each do |directory|
+    Dir.chdir directory do
+      command =
+        case Pathname.new(File.expand_path(Dir.pwd))
+        when test.curry['.bzr']   then ['bzr', 'pull']
+        when test.curry['CVS']    then ['cvs', 'update']
+        when test.curry['_darcs'] then ['darcs', 'pull']
+        when test.curry['.git']   then ['git', 'pull']
+        when test.curry['.hg']    then ['hg', 'pull', '-u']
+        when test.curry['.svn']   then ['svn', 'update']
+        else
+          warn "#{directory} is not a valid repository."
+          exit 1
+        end
 
-  repo_type =
-    case Pathname.new(File.expand_path(directory))
-    when test.curry['.bzr']   then :bazaar
-    when test.curry['CVS']    then :cvs
-    when test.curry['_darcs'] then :darcs
-    when test.curry['.git']   then :git
-    when test.curry['.hg']    then :mercurial
-    when test.curry['.svn']   then :subversion
-    else fail "#{directory} is not a valid repository."
+      printf "in %s:\n", Dir.pwd
+      system(*command)
     end
-
-  Dir.chdir directory do
-    printf "in %s:\n", Dir.pwd
-    system(*UPDATE_COMMANDS[repo_type])
   end
 end
-
-
-ARGV.each(&method(:sync_repo)) if __FILE__ == $PROGRAM_NAME
