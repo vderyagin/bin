@@ -20,7 +20,7 @@ MPC_FORMAT = [
 
 output, status = Open3.capture2e("mpc --format '#{MPC_FORMAT}'")
 
-unless status == 0
+unless status.success?
   `notify-send Stopped`
   exit
 end
