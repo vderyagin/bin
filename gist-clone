@@ -3,6 +3,7 @@
 =begin
 
 Clone gists through ssh.
+Shells out to git(1).
 
 By default puts everyting in home directory, set
 GISTS_PATH enviroment variable to use other location.
