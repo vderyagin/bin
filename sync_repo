@@ -10,10 +10,10 @@ Author: Victor Deryagin <vderyagin@gmail.com>
 
 =end
 
-require 'pathname'
-
 def has_dir(dir)
-  ->(d, pdir) { (pdir + d).directory? }.curry[dir]
+  ->(d, pdir) {
+    File.directory?(File.expand_path(d, pdir))
+  }.curry[dir]
 end
 
 if __FILE__ == $PROGRAM_NAME
@@ -25,7 +25,7 @@ if __FILE__ == $PROGRAM_NAME
   ARGV.each do |directory|
     Dir.chdir directory do
       command =
-        case Pathname.new(Dir.pwd)
+        case Dir.pwd
         when has_dir('.bzr')   then ['bzr', 'pull']
         when has_dir('CVS')    then ['cvs', 'update']
         when has_dir('_darcs') then ['darcs', 'pull']
