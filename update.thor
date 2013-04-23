@@ -28,6 +28,14 @@ class Update < Thor
     end
   end
 
+  desc 'skb', 'get jar needed to run skb'
+  def skb
+    url = 'http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch//0.12.3/sbt-launch.jar'
+    lib_dir = File.expand_path('../lib', __FILE__)
+    Dir.mkdir lib_dir unless File.directory?(lib_dir)
+    system 'wget', '--directory-prefix', 'lib', url
+  end
+
   no_commands do
     def location_of(script_name)
       File.expand_path(script_name.to_s, BIN_DIR)
