@@ -2,7 +2,7 @@
 
 =begin
 
-Output list of files in git repository sorted by times changed.
+Output list of files in git repository sorted by number of times changed.
 
 Created: 7 Nov 2012
 Author: Victor Deryagin <vderyagin@gmail.com>
