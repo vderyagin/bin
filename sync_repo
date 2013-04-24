@@ -11,8 +11,8 @@ Author: Victor Deryagin <vderyagin@gmail.com>
 =end
 
 def has_dir(dir)
-  ->(d, pdir) {
-    File.directory?(File.expand_path(d, pdir))
+  ->(directory, parent) {
+    File.directory?(File.expand_path(directory, parent))
   }.curry[dir]
 end
 
