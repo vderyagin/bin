@@ -1,0 +1,67 @@
+#! /usr/bin/env ruby
+
+=begin
+
+Download videos from various video hosting sites (for complete list see
+`youtube-dl --list-extractors`). If more then one argument is provided
+multiple jobs are run to download videos in parallel.
+
+Shells out to youtube-dl(1), moreutils_parallel(1) from 'moreutils' package
+(http://joeyh.name/code/moreutils/) is used for spawning multiple jobs when
+needed.
+
+Created: 24 Apr 2013
+Author: Victor Deryagin <vderyagin@gmail.com>
+
+=end
+
+require 'optparse'
+
+OUT_DIR = ENV['YOUTUBE_DL_DIR'] || File.expand_path('.')
+FILENAME_FORMAT = '%(title)s (%(upload_date)s).%(ext)s'
+DESTINATION = File.join(OUT_DIR, FILENAME_FORMAT)
+
+options = {
+  jobs: 3,
+}
+
+parser = OptionParser.new do |opts|
+  name = File.basename($PROGRAM_NAME)
+
+  opts.banner =  "Usage:\t#{name} [options] URL..."
+
+  opts.on('-j JOBS', '--jobs JOBS', Integer,
+          "Number of separate jobs to run, default is #{options[:jobs]}"
+          ) do |jobs|
+    options[:jobs] = jobs
+  end
+
+  opts.on '-h', '--help', 'Display this message' do
+    puts opts
+    exit
+  end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  ARGV << '--help' if ARGV.empty?
+  parser.parse!
+
+  cmd = [
+    'youtube-dl',
+    '--output',
+    DESTINATION,
+  ]
+
+  if ARGV.size > 1
+    cmd = [
+      'moreutils_parallel',
+      '-j',
+      options[:jobs].to_s,
+      *cmd,
+      '--no-progress',
+      '--',
+    ]
+  end
+
+  system(*cmd, *ARGV)
+end
