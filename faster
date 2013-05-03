@@ -39,7 +39,7 @@ parser = OptionParser.new do |opts|
     options[:dir] = dir
   end
 
-  opts.on('--[no-]delete-originals', "Delete original files.") do |del|
+  opts.on('--[no-]delete-original', "Delete original files.") do |del|
     options[:delete_original] = del
   end
 
