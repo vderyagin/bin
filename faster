@@ -14,7 +14,7 @@ require 'optparse'
 require 'pathname'
 
 options = {
-  speed: 1.33,
+  speed: 1.4,
   dir: Pathname.new(Dir.pwd),
   delete_original: false,
 }
