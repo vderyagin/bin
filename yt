@@ -70,6 +70,12 @@ if __FILE__ == $PROGRAM_NAME
   ARGV << '--help' if ARGV.empty?
   parser.parse!
 
+
+  if ARGV.empty?
+    warn 'no URLs to download'
+    exit 1
+  end
+
   cmd = [
     'youtube-dl',
     '--output',
