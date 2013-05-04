@@ -22,7 +22,7 @@ FILENAME_FORMAT = '%(title)s (%(upload_date)s).%(ext)s'
 DESTINATION = File.join(OUT_DIR, FILENAME_FORMAT)
 
 options = {
-  jobs: 3,
+  jobs: 5,
 }
 
 parser = OptionParser.new do |opts|
