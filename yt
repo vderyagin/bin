@@ -42,6 +42,30 @@ parser = OptionParser.new do |opts|
   end
 end
 
+def youtube?(url)
+  url =~ %r(\Ahttps?://(w{3}\.)?youtu(\.be|be\.com)/)
+end
+
+def youtube_playlist?(url)
+  youtube?(url) && url =~ /[&\?]list=.+/
+end
+
+def youtube_single_video?(url)
+  youtube?(url) && url =~ /\/watch\?v=.+/
+end
+
+# if both video and playlist are specified, youtube-dl(1) tries to download
+# whole playlist from the beginning, this is the fix:
+def clean(url)
+  url = url.dup
+
+  if youtube_single_video?(url) && youtube_playlist?(url)
+    url[/&list=[a-z0-9]+/i] = ''
+  end
+
+  url
+end
+
 if __FILE__ == $PROGRAM_NAME
   ARGV << '--help' if ARGV.empty?
   parser.parse!
@@ -63,5 +87,5 @@ if __FILE__ == $PROGRAM_NAME
     ]
   end
 
-  system(*cmd, *ARGV)
+  system(*cmd, *ARGV.map(&method(:clean)))
 end
