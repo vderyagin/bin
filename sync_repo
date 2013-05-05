@@ -19,8 +19,6 @@ end
 if __FILE__ == $PROGRAM_NAME
   puts "Usage: #{File.basename(__FILE__)} DIRECTORY..." if ARGV.empty?
 
-  invalid_repos = []
-
   ARGV.select(&(File.method(:directory?))).each do |directory|
     Dir.chdir directory do
       command =
@@ -31,19 +29,11 @@ if __FILE__ == $PROGRAM_NAME
         when has_dir('.git')   then ['git', 'pull']
         when has_dir('.hg')    then ['hg', 'pull', '--update']
         when has_dir('.svn')   then ['svn', 'update']
-        else
-          warn "#{directory} is not a valid repository."
-          invalid_repos << directory
+        else next
         end
 
       printf "in %s:\n", Dir.pwd
       system(*command)
     end
-  end
-
-  unless invalid_repos.empty?
-    warn 'These directories are not valid repositories:'
-    $stderr.puts invalid_repos
-    exit 1
   end
 end
