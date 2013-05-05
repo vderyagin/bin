@@ -64,7 +64,7 @@ def clean(url)
   url = url.dup
 
   if youtube_single_video?(url) && youtube_playlist?(url)
-    url[/&list=[a-z0-9]+/i] = ''
+    url[/&list=[a-z0-9_]+/i] = ''
   end
 
   url
@@ -119,7 +119,7 @@ if __FILE__ == $PROGRAM_NAME
 
     describe 'clean' do
       it 'cleans up playlist is specified in single-video url' do
-        url = 'http://www.youtube.com/watch?v=SomeVid&list=UU1jYjQ&index=2'
+        url = 'http://www.youtube.com/watch?v=SomeVid&list=UU1_jYjQ&index=2'
         clean(url).must_equal 'http://www.youtube.com/watch?v=SomeVid&index=2'
       end
 
