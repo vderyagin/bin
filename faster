@@ -16,7 +16,7 @@ require 'pathname'
 options = {
   speed: 1.4,
   dir: Pathname.new(Dir.pwd),
-  delete_original: false,
+  keep_original: false,
 }
 
 parser = OptionParser.new do |opts|
@@ -39,8 +39,8 @@ parser = OptionParser.new do |opts|
     options[:dir] = dir
   end
 
-  opts.on('--[no-]delete-original', "Delete original files.") do |del|
-    options[:delete_original] = del
+  opts.on('--[no-]keep-original', "Keep original files.") do |keep|
+    options[:keep_original] = keep
   end
 
   opts.on '-h', '--help', 'Display this message' do
@@ -75,6 +75,6 @@ if __FILE__ == $PROGRAM_NAME
 
     system(*cmd)
 
-    old.delete if options[:delete_original]
+    old.delete unless options[:keep_original]
   end
 end
