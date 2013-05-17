@@ -47,7 +47,7 @@ parser = OptionParser.new do |opts|
 end
 
 def youtube?(url)
-  url =~ %r(\Ahttps?://(w{3}\.)?youtu(\.be|be\.com)/)
+  url =~ %r(\Ahttps?://(w{3}\.)?(m.)?youtu(\.be|be\.com)/)
 end
 
 def youtube_playlist?(url)
@@ -78,6 +78,10 @@ if __FILE__ == $PROGRAM_NAME
     describe 'youtube?' do
       it 'matches youtube.com urls' do
         must_be :youtube?, 'https://youtube.com/flsdkjf'
+      end
+
+      it 'matches m.youtube.com urls' do
+        must_be :youtube?, 'https://m.youtube.com/flsdkjf'
       end
 
       it 'matches youtu.be urls' do
