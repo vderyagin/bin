@@ -25,9 +25,9 @@ class Bin < Thor
       begin
         content = open(location).read
       rescue StandardError => err
-        print "failed: #{err.message}\n"
+        puts "failed: #{err.message}"
       else
-        print "done\n"
+        puts 'done'
         File.write file, content
         File.chmod 0744, file
       end
