@@ -87,14 +87,31 @@ class Bin < Thor
     end
   end
 
+  desc 'hsmarkdown', 'make symlink pandoc -> hsmarkdown'
+  def hsmarkdown
+    symlink_executable 'pandoc', 'hsmarkdown'
+  end
+
   desc 'unrar_free', 'make symlink unrar-gpl -> unrar-free'
   def unrar_free
-    unrar_gpl = `which unrar-gpl`.chomp
-    warn 'no unrar-gpl executable found' unless $CHILD_STATUS.success?
-    FileUtils.ln_sf unrar_gpl, File.expand_path('unrar-free', BIN_DIR)
+    symlink_executable 'unrar-gpl', 'unrar-free'
   end
 
   no_commands do
+    def symlink_executable(from, to)
+      IO.popen(['which', from]) do |io|
+        source = io.read.chomp
+        io.close
+
+        if  $CHILD_STATUS.success?
+          target = File.expand_path(to, BIN_DIR)
+          FileUtils.ln_sf source, target
+        else
+          warn "no #{from} executable found"
+        end
+      end
+    end
+
     def location_of(script_name)
       File.expand_path(script_name.to_s, BIN_DIR)
     end
