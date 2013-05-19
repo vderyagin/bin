@@ -12,13 +12,7 @@ Author: Victor Deryagin <vderyagin@gmail.com>
 
 require 'open3'
 
-MPC_FORMAT = [
-  :artist,
-  :album,
-  :title,
-  :date
-].map { |s| "%#{s}%" }.join("\n")
-
+MPC_FORMAT = %w(artist album title date).map { |s| "%#{s}%" }.join("\n")
 output, status = Open3.capture2e("mpc --format '#{MPC_FORMAT}'")
 
 unless status.success?
@@ -28,18 +22,8 @@ end
 
 artist, album, title, date, rest = output.split "\n"
 
-/
-^
-\[(?<state>playing|paused)\]
-\s+
-[\#\d\/]+
-\s+
-(?<time>.*)
-$
-/x =~ rest
-
+/\A\[(?<state>playing|paused)\]\s+[\#\d\/]+\s+(?<time>.*)\z/ =~ rest
 notification = "#{artist} - #{title}\n#{album} (#{date})\n#{time}"
-
 icon = File.expand_path "~/.icons/#{state}.png"
 
 command = []
