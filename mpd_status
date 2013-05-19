@@ -19,7 +19,6 @@ MPC_FORMAT = [
   :date
 ].map { |s| "%#{s}%" }.join("\n")
 
-
 output, status = Open3.capture2e("mpc --format '#{MPC_FORMAT}'")
 
 unless status.success?
@@ -29,16 +28,15 @@ end
 
 artist, album, title, date, rest = output.split "\n"
 
-%r{
+/
 ^
 \[(?<state>playing|paused)\]
 \s+
-[\#\d/]+
+[\#\d\/]+
 \s+
 (?<time>.*)
 $
-}x =~ rest
-
+/x =~ rest
 
 notification = "#{artist} - #{title}\n#{album} (#{date})\n#{time}"
 
