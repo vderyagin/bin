@@ -34,7 +34,7 @@ class Bin < Thor
     end
   end
 
-  desc 'skb', 'get jar needed to run sbt'
+  desc 'sbt', 'get jar needed to run sbt'
   def sbt
     url = 'http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch//0.12.3/sbt-launch.jar'
 
