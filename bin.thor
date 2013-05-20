@@ -110,7 +110,7 @@ class Bin < Thor
         source = io.read.chomp
         io.close
 
-        if  $CHILD_STATUS.success?
+        if $CHILD_STATUS.success?
           target = File.expand_path(to, BIN_DIR)
           FileUtils.ln_sf source, target
         else
