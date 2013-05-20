@@ -54,9 +54,10 @@ class Bin < Thor
   desc 'sbt', 'get jar needed to run sbt'
   def sbt
     lib_dir = File.expand_path('lib', BIN_DIR)
+    Dir.mkdir lib_dir unless File.directory?(lib_dir)
+
     target = File.expand_path('sbt-launch.jar', lib_dir)
     FileUtils.rm_f target
-    Dir.mkdir lib_dir unless File.directory?(lib_dir)
 
     download_file SBT_LAUNCH_URI, target
   end
