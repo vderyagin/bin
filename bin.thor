@@ -29,7 +29,7 @@ class Bin < Thor
   def scripts
     SCRIPTS.each do |script, location|
       file = location_of(script)
-      print "updating #{script}... "
+      say "updating #{script}... "
       content = url_content(location)
       replace_executable(file, content) if content
     end
@@ -97,9 +97,9 @@ class Bin < Thor
     def url_content(url)
       content = open(url).read
     rescue StandardError => err
-      puts "failed: #{err.message}"
+      say "failed: #{err.message}"
     else
-      puts 'done'
+      say 'done'
       content
     end
 
@@ -124,7 +124,7 @@ class Bin < Thor
           target = File.expand_path(to, BIN_DIR)
           FileUtils.ln_sf source, target
         else
-          warn "no #{from} executable found"
+          say "no #{from} executable found", :red
         end
       end
     end
