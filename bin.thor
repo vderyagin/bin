@@ -19,19 +19,9 @@ class Bin < Thor
   def scripts
     SCRIPTS.each do |script, location|
       file = location_of(script)
-
       print "updating #{script}... "
-
-      begin
-        content = open(location).read
-      rescue StandardError => err
-        puts "failed: #{err.message}"
-      else
-        FileUtils.rm_f file
-        File.write file, content
-        File.chmod 0744, file
-        puts 'done'
-      end
+      content = url_content(location)
+      replace_executable(file, content) if content
     end
   end
 
@@ -59,10 +49,7 @@ class Bin < Thor
 
         Dir.chdir 'skb' do
           system 'make', 'skb'
-          binary = File.expand_path('skb', BIN_DIR)
-
-          FileUtils.rm_f binary
-          FileUtils.cp 'skb', binary
+          place_binary 'skb'
         end
 
         FileUtils.rm_r 'skb'
@@ -78,10 +65,7 @@ class Bin < Thor
 
         Dir.chdir 'dzen' do
           system 'make'
-          binary = File.expand_path('dzen2', BIN_DIR)
-
-          FileUtils.rm_f binary
-          FileUtils.cp 'dzen2', binary
+          place_binary 'dzen2'
         end
 
         FileUtils.rm_r 'dzen'
@@ -100,6 +84,27 @@ class Bin < Thor
   end
 
   no_commands do
+    def url_content(url)
+      content = open(url).read
+    rescue StandardError => err
+      puts "failed: #{err.message}"
+    else
+      puts 'done'
+      content
+    end
+
+    def replace_executable(file, content)
+      FileUtils.rm_f file
+      File.write file, content
+      File.chmod 0744, file
+    end
+
+    def place_binary(name)
+      binary = File.expand_path(name, BIN_DIR)
+      FileUtils.rm_f binary
+      FileUtils.cp name, binary
+    end
+
     def symlink_executable(from, to)
       IO.popen(['which', from]) do |io|
         source = io.read.chomp
