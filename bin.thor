@@ -1,9 +1,22 @@
 require 'English'
 require 'fileutils'
+require 'net/http'
 require 'open-uri'
 require 'tmpdir'
 require 'uri'
-require 'net/http'
+
+=begin
+
+Shells out to:
+
+  file(1)
+  gcc(1)
+  git(1)
+  make(1)
+  strip(1)
+  which(1)
+
+=end
 
 class Bin < Thor
   BIN_DIR = File.expand_path('..', __FILE__)
