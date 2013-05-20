@@ -27,9 +27,10 @@ class Bin < Thor
       rescue StandardError => err
         puts "failed: #{err.message}"
       else
-        puts 'done'
+        FileUtils.rm_f file
         File.write file, content
         File.chmod 0744, file
+        puts 'done'
       end
     end
   end
@@ -46,6 +47,7 @@ class Bin < Thor
 
   desc 'emxkb', 'build emxkb from source'
   def emxkb
+    FileUtils.rm_f location_of('emxkb')
     system 'gcc', '-L/usr/X11R6/lib', '-lX11', '-o', 'emxkb', 'src/emxkb.c'
   end
 
