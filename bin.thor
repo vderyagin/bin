@@ -2,9 +2,19 @@ require 'English'
 require 'fileutils'
 require 'open-uri'
 require 'tmpdir'
+require 'uri'
+require 'net/http'
 
 class Bin < Thor
   BIN_DIR = File.expand_path('..', __FILE__)
+
+  SBT_VERSION = '0.12.3'
+
+  SBT_LAUNCH_URI =
+    'http://repo.typesafe.com/' +
+    'typesafe/ivy-releases/org.scala-sbt/sbt-launch/' +
+    SBT_VERSION +
+    '/sbt-launch.jar'
 
   SCRIPTS = {
     'git-wip' => 'https://raw.github.com/bartman/git-wip/master/git-wip',
@@ -27,12 +37,12 @@ class Bin < Thor
 
   desc 'sbt', 'get jar needed to run sbt'
   def sbt
-    url = 'http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch//0.12.3/sbt-launch.jar'
-
     lib_dir = File.expand_path('lib', BIN_DIR)
-    FileUtils.rm_f File.expand_path('sbt-launch.jar', lib_dir)
+    target = File.expand_path('sbt-launch.jar', lib_dir)
+    FileUtils.rm_f target
     Dir.mkdir lib_dir unless File.directory?(lib_dir)
-    system 'wget', '--directory-prefix', 'lib', url
+
+    download_file SBT_LAUNCH_URI, target
   end
 
   desc 'emxkb', 'build emxkb from source'
@@ -121,6 +131,28 @@ class Bin < Thor
 
     def location_of(script_name)
       File.expand_path(script_name.to_s, BIN_DIR)
+    end
+
+    def download_file(uri, target)
+      u = URI(uri)
+
+      host = u.host
+      path = u.path
+      io = open(target, 'wb')
+
+      Net::HTTP.start host do |http|
+        stream_http http, path, io
+      end
+    end
+
+    def stream_http(http, path, io)
+      http.request_get path do |response|
+        response.read_body do |segment|
+          io.write segment
+        end
+      end
+    ensure
+      io.close
     end
   end
 end
