@@ -106,7 +106,7 @@ class Bin < Thor
     end
 
     def symlink_executable(from, to)
-      IO.popen(['which', from]) do |io|
+      IO.popen ['which', from] do |io|
         source = io.read.chomp
         io.close
 
