@@ -176,12 +176,14 @@ class Bin < Thor
     end
 
     def in_git_repo(uri, &block)
+      repo_dir =  uri[%r((?<=/)[^/]+(?=\.git\z))] || 'git_repo'
+
       in_temporary_directory do
         begin
-          system 'git', 'clone', uri, 'git_repo'
-          Dir.chdir 'git_repo', &block
+          system 'git', 'clone', uri, repo_dir
+          Dir.chdir repo_dir, &block
         ensure
-          FileUtils.rm_rf 'git_repo'
+          FileUtils.rm_rf repo_dir
         end
       end
     end
