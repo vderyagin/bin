@@ -24,10 +24,12 @@ class Bin < Thor
   SBT_VERSION = '0.12.3'
 
   SBT_LAUNCH_URI =
-    'http://repo.typesafe.com/' +
-    'typesafe/ivy-releases/org.scala-sbt/sbt-launch/' +
-    SBT_VERSION +
-    '/sbt-launch.jar'
+    URI(
+        'http://repo.typesafe.com/' +
+        'typesafe/ivy-releases/org.scala-sbt/sbt-launch/' +
+        SBT_VERSION +
+        '/sbt-launch.jar'
+        )
 
   SCRIPTS = {
     'git-wip' => 'https://raw.github.com/bartman/git-wip/master/git-wip',
@@ -150,25 +152,19 @@ class Bin < Thor
     end
 
     def download_file(uri, target)
-      u = URI(uri)
-
-      host = u.host
-      path = u.path
-      io = open(target, 'wb')
-
-      Net::HTTP.start host do |http|
-        stream_http http, path, io
+      File.open target, 'wb' do |file|
+        stream_http uri, file
       end
     end
 
-    def stream_http(http, path, io)
-      http.request_get path do |response|
-        response.read_body do |segment|
-          io.write segment
+    def stream_http(uri, io)
+      Net::HTTP.start uri.host do |http|
+        http.request_get uri.path do |response|
+          response.read_body do |segment|
+            io.write segment
+          end
         end
       end
-    ensure
-      io.close
     end
 
     def in_github_repo(repo, &block)
