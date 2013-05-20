@@ -23,7 +23,10 @@ class Bin < Thor
   }
 
   desc 'all', 'do everyting'
-  alias_method :all, :invoke_all
+  def all
+    invoke_all
+    strip_binaries
+  end
 
   desc 'scripts', 'update all scripts'
   def scripts
@@ -131,6 +134,21 @@ class Bin < Thor
 
     def location_of(script_name)
       File.expand_path(script_name.to_s, BIN_DIR)
+    end
+
+    def strip_binaries
+      Dir[File.expand_path('*', BIN_DIR)]
+        .select(&method(:unstripped_binary?))
+        .each(&method(:strip))
+    end
+
+    def strip(file)
+      say "stripping binary file #{file}"
+      system 'strip', file
+    end
+
+    def unstripped_binary?(file)
+      IO.popen(['file', file]).read[/, not stripped$/]
     end
 
     def download_file(uri, target)
