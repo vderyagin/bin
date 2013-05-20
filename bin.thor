@@ -70,33 +70,17 @@ class Bin < Thor
 
   desc 'skb', 'download skb source and build it'
   def skb
-    Dir.mktmpdir do |tmpdir|
-      Dir.chdir tmpdir do
-        system 'git', 'clone', 'https://github.com/polachok/skb.git'
-
-        Dir.chdir 'skb' do
-          system 'make', 'skb'
-          place_binary 'skb'
-        end
-
-        FileUtils.rm_r 'skb'
-      end
+    in_github_repo 'polachok/skb' do
+      system 'make', 'skb'
+      place_binary 'skb'
     end
   end
 
   desc 'dzen2', 'download dzen2 source and build it'
   def dzen2
-    Dir.mktmpdir do |tmpdir|
-      Dir.chdir tmpdir do
-        system 'git', 'clone', 'https://github.com/robm/dzen.git'
-
-        Dir.chdir 'dzen' do
-          system 'make'
-          place_binary 'dzen2'
-        end
-
-        FileUtils.rm_r 'dzen'
-      end
+    in_github_repo 'robm/dzen' do
+      system 'make'
+      place_binary 'dzen2'
     end
   end
 
@@ -185,6 +169,27 @@ class Bin < Thor
       end
     ensure
       io.close
+    end
+
+    def in_github_repo(repo, &block)
+      in_git_repo "https://github.com/#{repo}.git", &block
+    end
+
+    def in_git_repo(uri, &block)
+      in_temporary_directory do
+        begin
+          system 'git', 'clone', uri, 'git_repo'
+          Dir.chdir 'git_repo', &block
+        ensure
+          FileUtils.rm_rf 'git_repo'
+        end
+      end
+    end
+
+    def in_temporary_directory(&block)
+      Dir.mktmpdir do |tmpdir|
+        Dir.chdir tmpdir, &block
+      end
     end
   end
 end
