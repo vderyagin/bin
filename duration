@@ -181,5 +181,5 @@ if __FILE__ == $PROGRAM_NAME
     end
   end
 
-  puts "Total duration: #{total}"
+  puts "Total duration: #{total}" unless options[:verbose] && ARGV.size == 1
 end
