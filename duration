@@ -92,7 +92,7 @@ class Duration
   end
   protected :'=='
 
-  def empty?
+  def zero?
     [
       :seconds,
       :minutes,
@@ -103,7 +103,7 @@ class Duration
   end
 
   def to_s
-    return '0 seconds.' if empty?
+    return '0 seconds.' if zero?
 
     summary = []
 
@@ -169,7 +169,7 @@ if __FILE__ == $PROGRAM_NAME
   ARGV.each do |f|
     current = duration(f)
 
-    next if current.empty?
+    next if current.zero?
 
     total += current
 
