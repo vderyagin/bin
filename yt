@@ -163,5 +163,9 @@ if __FILE__ == $PROGRAM_NAME
     ]
   end
 
-  system(*cmd, *ARGV.map(&method(:clean)))
+  begin
+    system(*cmd, *ARGV.map(&method(:clean)))
+  rescue Interrupt
+    exit 1
+  end
 end
