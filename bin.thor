@@ -14,7 +14,6 @@ Shells out to:
   git(1)
   make(1)
   strip(1)
-  unzip(1)
   which(1)
 
 =end
@@ -32,9 +31,6 @@ class Bin < Thor
         SBT_VERSION +
         '/sbt-launch.jar'
         )
-
-  CLOSURE_COMPILER_URI =
-    URI('http://closure-compiler.googlecode.com/files/compiler-latest.zip')
 
   SCRIPTS = {
     'git-wip' => 'https://raw.github.com/bartman/git-wip/master/git-wip',
@@ -66,17 +62,6 @@ class Bin < Thor
     FileUtils.rm_f target
 
     download_file SBT_LAUNCH_URI, target
-  end
-
-  desc 'closure_compiler', 'get jar needed to run closure-compiler'
-  def closure_compiler
-    ensure_directory LIB_DIR
-
-    in_temporary_directory do
-      download_file CLOSURE_COMPILER_URI, 'compiler.zip'
-      system 'unzip', 'compiler.zip'
-      FileUtils.cp 'compiler.jar', LIB_DIR
-    end
   end
 
   desc 'emxkb', 'build emxkb from source'
