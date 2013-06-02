@@ -20,6 +20,7 @@ Shells out to:
 
 class Bin < Thor
   BIN_DIR = File.expand_path('..', __FILE__)
+  LIB_DIR = File.expand_path('lib', BIN_DIR)
 
   SBT_VERSION = '0.12.3'
 
@@ -55,10 +56,9 @@ class Bin < Thor
 
   desc 'sbt', 'get jar needed to run sbt'
   def sbt
-    lib_dir = File.expand_path('lib', BIN_DIR)
-    Dir.mkdir lib_dir unless File.directory?(lib_dir)
+    ensure_directory LIB_DIR
 
-    target = File.expand_path('sbt-launch.jar', lib_dir)
+    target = File.expand_path('sbt-launch.jar', LIB_DIR)
     FileUtils.rm_f target
 
     download_file SBT_LAUNCH_URI, target
@@ -188,6 +188,10 @@ class Bin < Thor
       Dir.mktmpdir do |tmpdir|
         Dir.chdir tmpdir, &block
       end
+    end
+
+    def ensure_directory(dir)
+      Dir.mkdir dir unless File.directory?(dir)
     end
   end
 end
