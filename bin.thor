@@ -14,6 +14,7 @@ Shells out to:
   git(1)
   make(1)
   strip(1)
+  unzip(1)
   which(1)
 
 =end
