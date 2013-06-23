@@ -1,0 +1,48 @@
+#! /usr/bin/env ruby
+
+=begin
+
+Serve static files in directory via http.
+
+Created: 23 Jun 2012
+Author: Victor Deryagin <vderyagin@gmail.com>
+
+=end
+
+require 'webrick'
+require 'optparse'
+
+options = {
+  Port:         9090,
+  DocumentRoot: Dir.pwd
+}
+
+OptionParser.new do |opts|
+  executable_name = File.basename($PROGRAM_NAME)
+
+  opts.banner = "Usage: #{executable_name} [OPTIONS]"
+
+  opts.separator ''
+  opts.separator 'Options:'
+
+  opts.on '-h', '--help', 'Display this message' do
+    puts opts
+    exit
+  end
+
+  opts.on '-p', '--port PORT', Integer, 'Port to serve on' do |port|
+    options[:Port] = port
+  end
+
+  opts.on '-r', '--root DIR', String, 'Directory to serve' do |dir|
+    options[:DocumentRoot] = dir
+  end
+end.parse! ARGV
+
+server = WEBrick::HTTPServer.new(options)
+
+trap :INT do
+  server.shutdown
+end
+
+server.start
