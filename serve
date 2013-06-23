@@ -20,7 +20,7 @@ options = {
 OptionParser.new do |opts|
   executable_name = File.basename($PROGRAM_NAME)
 
-  opts.banner = "Usage: #{executable_name} [OPTIONS]"
+  opts.banner = "Usage: #{executable_name} [OPTIONS] [DIR]"
 
   opts.separator ''
   opts.separator 'Options:'
@@ -33,11 +33,9 @@ OptionParser.new do |opts|
   opts.on '-p', '--port PORT', Integer, 'Port to serve on' do |port|
     options[:Port] = port
   end
-
-  opts.on '-r', '--root DIR', String, 'Directory to serve' do |dir|
-    options[:DocumentRoot] = dir
-  end
 end.parse! ARGV
+
+options[:DocumentRoot] = ARGV.first unless ARGV.empty?
 
 server = WEBrick::HTTPServer.new(options)
 
