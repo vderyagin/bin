@@ -152,19 +152,7 @@ class Bin < Thor
     end
 
     def download_file(uri, target)
-      File.open target, 'wb' do |file|
-        stream_http uri, file
-      end
-    end
-
-    def stream_http(uri, io)
-      Net::HTTP.start uri.host do |http|
-        http.request_get uri.path do |response|
-          response.read_body do |segment|
-            io.write segment
-          end
-        end
-      end
+      system 'wget', String(uri), '-O', target
     end
 
     def in_github_repo(repo, &block)
