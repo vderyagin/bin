@@ -25,12 +25,7 @@ class Bin < Thor
   SBT_VERSION = '0.12.3'
 
   SBT_LAUNCH_URI =
-    URI(
-        'http://repo.typesafe.com/' +
-        'typesafe/ivy-releases/org.scala-sbt/sbt-launch/' +
-        SBT_VERSION +
-        '/sbt-launch.jar'
-        )
+    "http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/#{SBT_VERSION}/sbt-launch.jar"
 
   ODESK_TEAM_URI =
     'https://docs.google.com/uc?export=download&id=0B1NdDtEdfiQpTkRrOFREdTdNcnc'
