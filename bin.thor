@@ -68,7 +68,7 @@ class Bin < Thor
     download_file SBT_LAUNCH_URI, target
   end
 
-  desc 'odeskteam', 'install odeskteam application'
+  desc 'odeskteam', 'install "oDesk Team" application (https://www.odesk.com/downloads)'
   def odeskteam
     ensure_directory_exists LIB_DIR
 
@@ -82,7 +82,7 @@ class Bin < Thor
     end
   end
 
-  desc 'dart', 'install Dart SDK'
+  desc 'dart', 'install Dart SDK (http://www.dartlang.org/tools/sdk)'
   def dart
     ensure_directory_exists LIB_DIR
 
