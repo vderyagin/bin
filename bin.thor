@@ -56,7 +56,7 @@ class Bin < Thor
 
   desc 'sbt', 'get jar needed to run sbt'
   def sbt
-    ensure_directory LIB_DIR
+    ensure_directory_exists LIB_DIR
 
     target = File.expand_path('sbt-launch.jar', LIB_DIR)
     FileUtils.rm_f target
@@ -66,7 +66,7 @@ class Bin < Thor
 
   desc 'odeskteam', 'install odeskteam application'
   def odeskteam
-    ensure_directory LIB_DIR
+    ensure_directory_exists LIB_DIR
 
     dist_location =  File.expand_path('odeskteam-3.2.13-1-x86_64', LIB_DIR)
     executable = File.expand_path('usr/bin/odeskteam-qt4', dist_location)
@@ -191,7 +191,7 @@ class Bin < Thor
       end
     end
 
-    def ensure_directory(dir)
+    def ensure_directory_exists(dir)
       Dir.mkdir dir unless File.directory?(dir)
     end
   end
