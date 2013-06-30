@@ -14,6 +14,7 @@ Shells out to:
   git(1)
   make(1)
   strip(1)
+  tar(1)
   unzip(1)
   wget(1)
   which(1)
@@ -31,6 +32,9 @@ class Bin < Thor
 
   ODESK_TEAM_URI =
     'https://docs.google.com/uc?export=download&id=0B1NdDtEdfiQpTkRrOFREdTdNcnc'
+
+  DART_SDK_URI =
+    'https://storage.googleapis.com/dart-editor-archive-integration/latest/dartsdk-linux-64.tar.gz'
 
   SCRIPTS = {
     'git-wip' => 'https://raw.github.com/bartman/git-wip/master/git-wip',
@@ -75,6 +79,20 @@ class Bin < Thor
       download_file ODESK_TEAM_URI, target
       FileUtils.rm_rf dist_location
       system 'unzip', target, '-d', LIB_DIR
+    end
+  end
+
+  desc 'dart', 'install Dart SDK'
+  def dart
+    ensure_directory_exists LIB_DIR
+
+    dist_location = File.expand_path('dart-sdk', LIB_DIR)
+
+    in_temporary_directory do
+      target = File.expand_path('dart-sdk', Dir.pwd)
+      download_file DART_SDK_URI, target
+      FileUtils.rm_rf dist_location
+      system 'tar', '--extract', '--gzip', '--file', target, '--directory', LIB_DIR
     end
   end
 
