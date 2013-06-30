@@ -69,7 +69,6 @@ class Bin < Thor
     ensure_directory_exists LIB_DIR
 
     dist_location =  File.expand_path('odeskteam-3.2.13-1-x86_64', LIB_DIR)
-    executable = File.expand_path('usr/bin/odeskteam-qt4', dist_location)
 
     in_temporary_directory do
       target = File.expand_path('odeskteam.zip', Dir.pwd)
@@ -77,8 +76,6 @@ class Bin < Thor
       FileUtils.rm_rf dist_location
       system 'unzip', target, '-d', LIB_DIR
     end
-
-    FileUtils.ln_sf executable, File.expand_path('odeskteam-qt4', BIN_DIR)
   end
 
   desc 'emxkb', 'build emxkb from source'
