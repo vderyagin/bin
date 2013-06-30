@@ -74,7 +74,7 @@ class Bin < Thor
     in_temporary_directory do
       target = File.expand_path('odeskteam.zip', Dir.pwd)
       download_file ODESK_TEAM_URI, target
-      FileUtils.rm_rf File.expand_path('odeskteam-3.2.13-1-x86_64', LIB_DIR)
+      FileUtils.rm_rf dist_location
       system 'unzip', target, '-d', LIB_DIR
     end
 
