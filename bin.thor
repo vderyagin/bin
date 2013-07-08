@@ -25,7 +25,7 @@ class Bin < Thor
   BIN_DIR = File.expand_path('..', __FILE__)
   LIB_DIR = File.expand_path('lib', BIN_DIR)
 
-  SBT_VERSION = '0.12.3'
+  SBT_VERSION = '0.12.4'
 
   SBT_LAUNCH_URI =
     "http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/#{SBT_VERSION}/sbt-launch.jar"
