@@ -1,0 +1,11 @@
+#! /usr/bin/env ruby
+
+EXTRACT_LAYOUT_REGEX = /\sconnected\s[\dx+]+\s(?:(?<layout>[^\s]+)\s+)?\(/
+
+next_layout = case `xrandr --query`[EXTRACT_LAYOUT_REGEX, :layout]
+              when 'left' then 'normal'
+              when nil    then 'left'
+              else raise 'unknown screen orientation'
+              end
+
+system 'xrandr', '--orientation', next_layout
