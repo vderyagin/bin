@@ -9,4 +9,5 @@ next_layout = case `xrandr --query`[EXTRACT_LAYOUT_REGEX, :layout]
               end
 
 system 'xrandr', '--orientation', next_layout
+system 'killall', '-9', 'dzen2'
 system 'xmonad', '--restart'
