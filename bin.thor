@@ -38,7 +38,7 @@ class Bin < Thor
 
   SCRIPTS = {
     'git-wip' => 'https://raw.github.com/bartman/git-wip/master/git-wip',
-    'hub' => 'http://defunkt.io/hub/standalone',
+    'hub' => 'http://hub.github.com/standalone',
     'lein' => 'https://raw.github.com/technomancy/leiningen/stable/bin/lein',
   }
 
