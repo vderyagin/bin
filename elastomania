@@ -1,4 +1,0 @@
-#! /bin/sh
-
-cd $HOME/misc/games/elastomania/
-wine Elma.exe
