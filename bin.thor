@@ -36,6 +36,8 @@ class Bin < Thor
   DART_SDK_URI =
     'https://storage.googleapis.com/dart-editor-archive-integration/latest/dartsdk-linux-64.tar.gz'
 
+  COPY_URI = 'https://copy.com/install/linux/Copy.tgz'
+
   SCRIPTS = {
     'git-wip' => 'https://raw.github.com/bartman/git-wip/master/git-wip',
     'hub' => 'http://hub.github.com/standalone',
@@ -91,6 +93,20 @@ class Bin < Thor
     in_temporary_directory do
       target = File.expand_path('dart-sdk', Dir.pwd)
       download_file DART_SDK_URI, target
+      FileUtils.rm_rf dist_location
+      system 'tar', '--extract', '--gzip', '--file', target, '--directory', LIB_DIR
+    end
+  end
+
+  desc 'copy', 'install Copy{Agent,Console,Cmd} tools (http://copy.com)'
+  def copy
+    ensure_directory_exists LIB_DIR
+
+    dist_location = File.expand_path('copy', LIB_DIR)
+
+    in_temporary_directory do
+      target = File.expand_path('copy', Dir.pwd)
+      download_file COPY_URI, target
       FileUtils.rm_rf dist_location
       system 'tar', '--extract', '--gzip', '--file', target, '--directory', LIB_DIR
     end

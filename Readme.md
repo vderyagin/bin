@@ -15,6 +15,7 @@ path=(
   "${HOME}/bin"
   "${HOME}/bin/lib/dart-sdk/bin"
   "${HOME}/bin/lib/odeskteam-3.2.13-1-x86_64/usr/bin"
+  "${HOME}/bin/lib/copy/x86_64"
   $path
 )
 ```
