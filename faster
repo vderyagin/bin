@@ -14,7 +14,7 @@ require 'optparse'
 require 'pathname'
 
 options = {
-  speed: 1.4,
+  speed: 1.9,
   dir: Pathname.new(Dir.pwd),
   keep_original: false,
   fat32: true,
