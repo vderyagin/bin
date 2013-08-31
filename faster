@@ -17,6 +17,7 @@ options = {
   speed: 1.4,
   dir: Pathname.new(Dir.pwd),
   keep_original: false,
+  fat32: true,
 }
 
 parser = OptionParser.new do |opts|
@@ -32,15 +33,18 @@ parser = OptionParser.new do |opts|
           'Directory to put converted files in, default is "."') do |dir|
     dir = Pathname.new(File.expand_path(dir))
 
-    unless dir.directory?
-      raise ArgumentError, "#{dir} is not a valid directory"
-    end
+    raise ArgumentError, "#{dir} is not a valid directory" unless dir.directory?
 
     options[:dir] = dir
   end
 
-  opts.on('--[no-]keep-original', "Keep original files.") do |keep|
+  opts.on('--[no-]keep-original', 'Keep original files.') do |keep|
     options[:keep_original] = keep
+  end
+
+  opts.on('--[no-]fat32',
+          'Replace characters forbidden in Fat32 in filenames.') do |fat32|
+    options[:fat32] = fat32
   end
 
   opts.on '-h', '--help', 'Display this message' do
@@ -62,7 +66,10 @@ if __FILE__ == $PROGRAM_NAME
     old = Pathname.new(file)
     ext = old.extname
 
-    new = options[:dir] + "#{old.basename(ext)}-#{options[:speed]}x.mp3"
+    new_basename = "#{old.basename(ext)}-#{options[:speed]}x.mp3"
+    new_basename = new_basename.gsub(/[:;\*\?"<>|]/, '_') if options[:fat32]
+
+    new_location = options[:dir] + new_basename
 
     cmd = []
 
@@ -71,7 +78,7 @@ if __FILE__ == $PROGRAM_NAME
     cmd << '-vn'                            # no video
     cmd << '-acodec' << 'mp3'
     cmd << '-filter:a' << "atempo=#{options[:speed]}"
-    cmd << new.to_s
+    cmd << new_location.to_s
 
     system(*cmd)
 
