@@ -30,8 +30,13 @@ class Bin < Thor
   SBT_LAUNCH_URI =
     "http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/#{SBT_VERSION}/sbt-launch.jar"
 
+  # v3.2.13-1-x86_64
   ODESK_TEAM_URI =
     'https://docs.google.com/uc?export=download&id=0B1NdDtEdfiQpTkRrOFREdTdNcnc'
+
+  # v2.03 (September 21, 2013)
+  K2PDFOPT_URI =
+    'https://docs.google.com/uc?export=download&id=0B1NdDtEdfiQpSDJjLThWRnZuRU0'
 
   DART_SDK_URI =
     'https://storage.googleapis.com/dart-editor-archive-integration/latest/dartsdk-linux-64.tar.gz'
@@ -81,6 +86,14 @@ class Bin < Thor
       download_file ODESK_TEAM_URI, target
       FileUtils.rm_rf dist_location
       system 'unzip', target, '-d', LIB_DIR
+    end
+  end
+
+  desc 'k2pdfopt', 'install k2pdfopt (http://www.willus.com/k2pdfopt/)'
+  def k2pdfopt
+    File.expand_path('k2pdfopt', BIN_DIR).tap do |k2pdfopt|
+      download_file K2PDFOPT_URI, k2pdfopt
+      File.chmod 0744, k2pdfopt
     end
   end
 
