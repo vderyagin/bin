@@ -39,7 +39,7 @@ class Bin < Thor
     'https://docs.google.com/uc?export=download&id=0B1NdDtEdfiQpSDJjLThWRnZuRU0'
 
   DART_SDK_URI =
-    'https://storage.googleapis.com/dart-editor-archive-integration/latest/dartsdk-linux-64.tar.gz'
+    'https://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-linux-x64-release.zip'
 
   COPY_URI = 'https://copy.com/install/linux/Copy.tgz'
 
@@ -107,7 +107,7 @@ class Bin < Thor
       target = File.expand_path('dart-sdk', Dir.pwd)
       download_file DART_SDK_URI, target
       FileUtils.rm_rf dist_location
-      system 'tar', '--extract', '--gzip', '--file', target, '--directory', LIB_DIR
+      system 'unzip', target, '-d', LIB_DIR
     end
   end
 
