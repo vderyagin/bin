@@ -17,12 +17,15 @@ Author: Victor Deryagin <vderyagin@gmail.com>
 
 require 'optparse'
 
-OUT_DIR = ENV['YOUTUBE_DL_DIR'] || File.expand_path('.')
 FILENAME_FORMAT = '%(title)s (%(upload_date)s).%(ext)s'
-DESTINATION = File.join(OUT_DIR, FILENAME_FORMAT)
+
+def destination(dir)
+  File.join(dir, FILENAME_FORMAT)
+end
 
 options = {
   jobs: 5,
+  out_dir: ENV['YOUTUBE_DL_DIR'] || File.expand_path('.'),
 }
 
 parser = OptionParser.new do |opts|
@@ -34,6 +37,12 @@ parser = OptionParser.new do |opts|
           "Number of separate jobs to run, default is #{options[:jobs]}"
           ) do |jobs|
     options[:jobs] = jobs
+  end
+
+  opts.on('-D DIR', '--output-directory DIR',
+          "directory to store files in, default is #{options[:out_dir]}"
+          ) do |dir|
+    options[:out_dir] = dir
   end
 
   opts.on('-t', '--test', 'Run tests') do
@@ -149,7 +158,7 @@ if __FILE__ == $PROGRAM_NAME
   cmd = [
     'youtube-dl',
     '--output',
-    DESTINATION,
+    destination(options[:out_dir]),
   ]
 
   if ARGV.size > 1
