@@ -1,0 +1,75 @@
+#! /usr/bin/env ruby
+
+require 'yaml'
+
+def config_file
+  File.expand_path('~/.flexget/config.yml')
+end
+
+def input_file
+  File.expand_path('~/.flexget/input.yml')
+end
+
+def default_download_dir
+  File.expand_path('~')
+end
+
+def input
+  YAML.load_file(input_file)
+end
+
+def output
+  {
+    'tasks' => tasks,
+    'presets' => presets
+  }
+end
+
+def tasks
+  input.each_with_object({}) do |(category, list), ts|
+    list.each do |name, url|
+      ts[name] = {
+        'preset' => category.chomp('s'),
+        'rss' => url_for(category, url)
+      }
+    end
+  end
+end
+
+def url_for(category, string)
+  case
+  when string[/\Ahttp/]
+    string
+  when category == 'youtube'
+    "http://gdata.youtube.com/feeds/base/users/#{string}/uploads"
+  else
+    fail "dunno what to do with this thing: '#{string}'"
+  end
+end
+
+def presets
+  {
+    'video-feed' => {
+      'download' => ENV['VIDEO_DOWNLOAD_DIR'] || default_download_dir
+    },
+    'podcast' => {
+      'download' => ENV['PODCASTS_DIR'] || default_download_dir
+    },
+    'youtube' => {
+      'exec' => {
+        'auto_escape' => true,
+        'on_output' => {
+          'for_accepted' => 'yt {{url}}'
+        }
+      }
+    },
+    'global' => {
+      'headers' => {
+        'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64; rv:25.0) Gecko/20100101 Firefox/25.0'
+      },
+      'accept_all' => true
+    }
+  }
+end
+
+File.write config_file, YAML.dump(output) if __FILE__ == $PROGRAM_NAME
