@@ -26,16 +26,16 @@ parser = OptionParser.new do |opts|
   opts.on('-s SPEED', '--speed SPEED', Float,
           "Specify speedup factor (0.5..2.0, default is #{options[:speed]})"
           ) do |speed|
-    options[:speed] = speed
+    options[:speed] = speed.tap do |sp|
+      abort "ERROR: #{sp} is not within (0.5..2.0)" unless (0.5..2.0).cover?(sp)
+    end
   end
 
   opts.on('-D DIR', '--output-directory DIR',
           'Directory to put converted files in, default is "."') do |dir|
-    dir = Pathname.new(File.expand_path(dir))
-
-    raise ArgumentError, "#{dir} is not a valid directory" unless dir.directory?
-
-    options[:dir] = dir
+    options[:dir] = Pathname.new(File.expand_path(dir)).tap do |d|
+      abort "ERROR: '#{d}' is not a valid directory" unless d.directory?
+    end
   end
 
   opts.on('--[no-]keep-original', 'Keep original files.') do |keep|
