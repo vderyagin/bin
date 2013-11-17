@@ -25,7 +25,7 @@ end
 
 options = {
   jobs: 5,
-  out_dir: ENV['YOUTUBE_DL_DIR'] || File.expand_path('.'),
+  out_dir: ENV['VIDEO_DOWNLOAD_DIR'] || File.expand_path('.'),
 }
 
 parser = OptionParser.new do |opts|
