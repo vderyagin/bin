@@ -1,5 +1,15 @@
 #! /usr/bin/env ruby
 
+=begin
+
+Generate flexget (http://flexget.com) configuration file based on
+simple-structured input config.
+
+Created: 16 Nov 2013
+Author: Victor Deryagin <vderyagin@gmail.com>
+
+=end
+
 require 'yaml'
 
 def config_file
