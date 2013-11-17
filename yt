@@ -42,7 +42,9 @@ parser = OptionParser.new do |opts|
   opts.on('-D DIR', '--output-directory DIR',
           "directory to store files in, default is #{options[:out_dir]}"
           ) do |dir|
-    options[:out_dir] = dir
+    options[:out_dir] = dir.tap do |d|
+      abort "ERROR: '#{d}' is not a valid directory" unless d.directory?
+    end
   end
 
   opts.on('-t', '--test', 'Run tests') do
