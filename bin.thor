@@ -91,7 +91,7 @@ class Bin < Thor
 
   desc 'k2pdfopt', 'install k2pdfopt (http://www.willus.com/k2pdfopt/)'
   def k2pdfopt
-    File.expand_path('k2pdfopt', BIN_DIR).tap do |k2pdfopt|
+    location_of('k2pdfopt').tap do |k2pdfopt|
       download_file K2PDFOPT_URI, k2pdfopt
       File.chmod 0744, k2pdfopt
     end
@@ -174,7 +174,7 @@ class Bin < Thor
     end
 
     def place_binary(name)
-      binary = File.expand_path(name, BIN_DIR)
+      binary = location_of(name)
       FileUtils.rm_f binary
       FileUtils.cp name, binary
     end
@@ -185,7 +185,7 @@ class Bin < Thor
         io.close
 
         if $CHILD_STATUS.success?
-          target = File.expand_path(to, BIN_DIR)
+          target = location_of(to)
           FileUtils.ln_sf source, target
         else
           say "no #{from} executable found", :red
@@ -193,12 +193,12 @@ class Bin < Thor
       end
     end
 
-    def location_of(script_name)
-      File.expand_path(script_name.to_s, BIN_DIR)
+    def location_of(executable)
+      File.expand_path(executable.to_s, BIN_DIR)
     end
 
     def strip_binaries
-      Dir[File.expand_path('*', BIN_DIR)]
+      Dir[location_of('*')]
         .select(&method(:unstripped_binary?))
         .each(&method(:strip))
     end
