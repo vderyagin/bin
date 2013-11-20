@@ -36,9 +36,9 @@ def output
 end
 
 def tasks
-  input.each_with_object({}) do |(category, list), ts|
+  input.each_with_object({}) do |(category, list), task|
     list.each do |name, url|
-      ts[name] = {
+      task[name] = {
         'preset' => category.chomp('s'),
         'rss' => url_for(category, url)
       }
