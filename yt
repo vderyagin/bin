@@ -43,7 +43,7 @@ parser = OptionParser.new do |opts|
           "directory to store files in, default is #{options[:out_dir]}"
           ) do |dir|
     options[:out_dir] = dir.tap do |d|
-      abort "ERROR: '#{d}' is not a valid directory" unless d.directory?
+      abort "ERROR: '#{d}' is not a valid directory" unless File.directory?(d)
     end
   end
 
