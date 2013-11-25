@@ -72,13 +72,11 @@ end
 # if both video and playlist are specified, youtube-dl(1) tries to download
 # whole playlist from the beginning, this is the fix:
 def clean(url)
-  url = url.dup
-
-  if youtube_single_video?(url) && youtube_playlist?(url)
-    url[/&list=[a-z0-9_]+/i] = ''
+  url.dup.tap do |u|
+    if youtube_single_video?(u) && youtube_playlist?(u)
+      u[/&list=[a-z0-9_]+/i] = ''
+    end
   end
-
-  url
 end
 
 if __FILE__ == $PROGRAM_NAME
