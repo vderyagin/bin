@@ -1,7 +1,10 @@
+#! /usr/bin/env ruby
+
 require 'English'
 require 'fileutils'
 require 'net/http'
 require 'open-uri'
+require 'thor'
 require 'tmpdir'
 require 'uri'
 
@@ -240,3 +243,5 @@ class Bin < Thor
     end
   end
 end
+
+Bin.start ARGV
