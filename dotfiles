@@ -79,7 +79,7 @@ class Dotfile
   end
 
   def symlink_overwritten?
-    symlink.exist? && !(symlink.symlink? && symlink_readlink == @path)
+    symlink.exist? && !(symlink.symlink? && symlink.readlink == @path)
   end
 
   def target
