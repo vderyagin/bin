@@ -48,7 +48,7 @@ parser = OptionParser.new do |opts|
   end
 
   opts.on('-t', '--test', 'Run tests') do
-    require 'minitest/autorun'
+    run_tests
   end
 
   opts.on '-h', '--help', 'Display this message' do
@@ -79,76 +79,78 @@ def clean(url)
   end
 end
 
+def run_tests
+  require 'minitest/autorun'
+
+  describe 'youtube?' do
+    it 'matches youtube.com urls' do
+      must_be :youtube?, 'https://youtube.com/flsdkjf'
+    end
+
+    it 'matches m.youtube.com urls' do
+      must_be :youtube?, 'https://m.youtube.com/flsdkjf'
+    end
+
+    it 'matches youtu.be urls' do
+      must_be :youtube?, 'http://youtu.be/flsdkjf'
+    end
+
+    it 'rejects non-youtube urls' do
+      wont_be :youtube?, 'https://vimeo.com/'
+    end
+  end
+
+  describe 'youtube_playlist?' do
+    it 'matches urls to youtube playlists' do
+      [
+        'http://www.youtube.com/playlist?list=lst',
+        'http://www.youtube.com/watch?v=foo&list=bar',
+      ].each do |url|
+        must_be :youtube_playlist?, url
+      end
+    end
+
+    it 'rejects urls without playlist specified' do
+      url = 'http://www.youtube.com/watch?v=dQw4w9WgXcQ'
+      wont_be :youtube_playlist?, url
+    end
+  end
+
+  describe 'youtube_single_video?' do
+    it 'matches url to single video' do
+      url = 'http://www.youtube.com/watch?v=dQw4w9WgXcQ'
+      must_be :youtube_single_video?, url
+    end
+
+    it 'rejects other stuff' do
+      url = 'http://www.youtube.com/playlist?list=lst'
+      wont_be :youtube_single_video?, url
+    end
+  end
+
+  describe 'clean' do
+    it 'cleans up playlist is specified in single-video url' do
+      url = 'http://www.youtube.com/watch?v=SomeVid&list=UU1_jYjQ&index=2'
+      clean(url).must_equal 'http://www.youtube.com/watch?v=SomeVid&index=2'
+    end
+
+    it 'does not mess with playlist-only urls' do
+      url = 'http://www.youtube.com/playlist?list=UU1yBKRZjYjQ'
+      clean(url).must_equal url
+    end
+
+    it 'does not mess with single-video urls' do
+      url = 'http://www.youtube.com/watch?v=dQw4w9WgXcQ'
+      clean(url).must_equal url
+    end
+  end
+
+  exit
+end
+
 if __FILE__ == $PROGRAM_NAME
   ARGV << '--help' if ARGV.empty?
   parser.parse!
-
-  if defined? MiniTest
-    describe 'youtube?' do
-      it 'matches youtube.com urls' do
-        must_be :youtube?, 'https://youtube.com/flsdkjf'
-      end
-
-      it 'matches m.youtube.com urls' do
-        must_be :youtube?, 'https://m.youtube.com/flsdkjf'
-      end
-
-      it 'matches youtu.be urls' do
-        must_be :youtube?, 'http://youtu.be/flsdkjf'
-      end
-
-      it 'rejects non-youtube urls' do
-        wont_be :youtube?, 'https://vimeo.com/'
-      end
-    end
-
-    describe 'youtube_playlist?' do
-      it 'matches urls to youtube playlists' do
-        [
-          'http://www.youtube.com/playlist?list=lst',
-          'http://www.youtube.com/watch?v=foo&list=bar',
-        ].each do |url|
-          must_be :youtube_playlist?, url
-        end
-      end
-
-      it 'rejects urls without playlist specified' do
-        url = 'http://www.youtube.com/watch?v=dQw4w9WgXcQ'
-        wont_be :youtube_playlist?, url
-      end
-    end
-
-    describe 'youtube_single_video?' do
-      it 'matches url to single video' do
-        url = 'http://www.youtube.com/watch?v=dQw4w9WgXcQ'
-        must_be :youtube_single_video?, url
-      end
-
-      it 'rejects other stuff' do
-        url = 'http://www.youtube.com/playlist?list=lst'
-        wont_be :youtube_single_video?, url
-      end
-    end
-
-    describe 'clean' do
-      it 'cleans up playlist is specified in single-video url' do
-        url = 'http://www.youtube.com/watch?v=SomeVid&list=UU1_jYjQ&index=2'
-        clean(url).must_equal 'http://www.youtube.com/watch?v=SomeVid&index=2'
-      end
-
-      it 'does not mess with playlist-only urls' do
-        url = 'http://www.youtube.com/playlist?list=UU1yBKRZjYjQ'
-        clean(url).must_equal url
-      end
-
-      it 'does not mess with single-video urls' do
-        url = 'http://www.youtube.com/watch?v=dQw4w9WgXcQ'
-        clean(url).must_equal url
-      end
-    end
-
-    exit
-  end
 
   if ARGV.empty?
     warn 'no URLs to download'
