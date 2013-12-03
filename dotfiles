@@ -49,6 +49,8 @@ class Dotfile
   end
 
   def create
+    fail if exist? || symlink.symlink?
+
     dirname.mkpath unless dirname.exist?
     symlink.rename @path
     make_symlink
