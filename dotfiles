@@ -90,6 +90,10 @@ class Dotfile
     symlink.exist? && symlink.symlink? && symlink.readlink == @path
   end
 
+  def print(printer)
+    printer.call(status.name, target, status.color)
+  end
+
   def status
     @status ||=
       Status.new(*case
@@ -108,7 +112,9 @@ class Dotfiles < Thor
 
   desc 'list', 'list managed files'
   def list
-    dotfiles.each(&method(:print_file))
+    dotfiles.each do |dotfile|
+      dotfile.print(method(:say_status))
+    end
   end
 
   desc 'manage FILE...', 'add files to repository'
@@ -140,10 +146,6 @@ class Dotfiles < Thor
 
     def dotfiles
       files.map(&Dotfile.method(:new))
-    end
-
-    def print_file(dotfile)
-      say_status dotfile.status.name, dotfile.target, dotfile.status.color
     end
   end
 end
