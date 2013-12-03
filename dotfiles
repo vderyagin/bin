@@ -57,6 +57,8 @@ class Dotfile
   end
 
   def remove
+    fail unless symlinked_correctly?
+
     symlink.delete unless symlink_missing?
 
     symlink.dirname.tap do |dir|
