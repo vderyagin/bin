@@ -22,7 +22,7 @@ module Helpers
 end
 
 class Dotfile
-  Status = Struct.new(:name, :color)
+  Status = Struct.new(:name, :message, :color)
 
   include Helpers
   extend Forwardable
@@ -36,6 +36,17 @@ class Dotfile
   def self.from_symlink(symlink)
     symlink = Pathname(File.expand_path(symlink))
     new(DOT_ROOT + symlink.relative_path_from(HOME))
+  end
+
+  def status
+    @status ||= Status.new.tap do |s|
+      s.message = symlink.to_s.sub(HOME.to_s, '~')
+      s.name, s.color = case
+                        when symlinked_correctly? then [:linked, :green]
+                        when symlink_missing?     then [:missing, :yellow]
+                        when symlink_overwritten? then [:overwritten, :red]
+                        end
+    end
   end
 
   def make_symlink
@@ -86,25 +97,8 @@ class Dotfile
     symlink.exist? && !(symlink.symlink? && symlink.readlink == @path)
   end
 
-  def target
-    symlink.to_s.sub(HOME.to_s, '~')
-  end
-
   def symlink_valid?
     symlink.exist? && symlink.symlink? && symlink.readlink == @path
-  end
-
-  def print(printer)
-    printer.call(status.name, target, status.color)
-  end
-
-  def status
-    @status ||=
-      Status.new(*case
-                  when symlinked_correctly? then [:linked, :green]
-                  when symlink_missing?     then [:missing, :yellow]
-                  when symlink_overwritten? then [:overwritten, :red]
-                  end)
   end
 end
 
@@ -116,8 +110,8 @@ class Dotfiles < Thor
 
   desc 'list', 'list managed files'
   def list
-    dotfiles.each do |dotfile|
-      dotfile.print(method(:say_status))
+    dotfiles.map(&:status).each do |status|
+      say_status status.name, status.message, status.color
     end
   end
 
@@ -144,12 +138,8 @@ class Dotfiles < Thor
       Pathname.glob(DOT_ROOT + '.git/**/*',  File::FNM_DOTMATCH).select(&:file?)
     end
 
-    def files
-      all_files - excluded_files
-    end
-
     def dotfiles
-      files.map(&Dotfile.method(:new))
+      (all_files - excluded_files).map(&Dotfile.method(:new))
     end
   end
 end
