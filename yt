@@ -175,7 +175,10 @@ if __FILE__ == $PROGRAM_NAME
   end
 
   begin
-    system(*cmd, *ARGV.map(&method(:clean)))
+    system(*cmd, *ARGV.map(&method(:clean))).tap do |result|
+      abort "command execution failed: #{cmd.inspect}" if result.nil?
+      abort 'non-zero exit status' unless result
+    end
   rescue Interrupt
     exit 1
   end
