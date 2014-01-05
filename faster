@@ -80,7 +80,10 @@ if __FILE__ == $PROGRAM_NAME
     cmd << '-filter:a' << "atempo=#{options[:speed]}"
     cmd << new_location.to_s
 
-    system(*cmd)
+    system(*cmd).tap do |result|
+      abort "command execution failed: #{cmd.inspect}" if result.nil?
+      abort 'non-zero exit status' unless result
+    end
 
     old.delete unless options[:keep_original]
   end
