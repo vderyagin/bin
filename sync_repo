@@ -26,7 +26,7 @@ if __FILE__ == $PROGRAM_NAME
         when has_dir('.bzr')   then %w(bzr pull)
         when has_dir('CVS')    then %w(cvs update)
         when has_dir('_darcs') then %w(darcs pull)
-        when has_dir('.git')   then %w(git pull)
+        when has_dir('.git')   then %w(git pull --rebase=false)
         when has_dir('.hg')    then %w(hg pull --update)
         when has_dir('.svn')   then %w(svn update)
         else next
