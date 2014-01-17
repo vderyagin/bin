@@ -10,7 +10,7 @@ Author: Victor Deryagin <vderyagin@gmail.com>
 
 =end
 
-def has_dir(dir)
+def dir?(dir)
   lambda { |directory, parent|
     File.directory?(File.expand_path(directory, parent))
   }.curry[dir]
@@ -23,12 +23,12 @@ if __FILE__ == $PROGRAM_NAME
     Dir.chdir directory do
       command =
         case Dir.pwd
-        when has_dir('.bzr')   then %w(bzr pull)
-        when has_dir('CVS')    then %w(cvs update)
-        when has_dir('_darcs') then %w(darcs pull)
-        when has_dir('.git')   then %w(git pull --rebase=false)
-        when has_dir('.hg')    then %w(hg pull --update)
-        when has_dir('.svn')   then %w(svn update)
+        when dir?('.bzr')   then %w(bzr pull)
+        when dir?('CVS')    then %w(cvs update)
+        when dir?('_darcs') then %w(darcs pull)
+        when dir?('.git')   then %w(git pull --rebase=false)
+        when dir?('.hg')    then %w(hg pull --update)
+        when dir?('.svn')   then %w(svn update)
         else next
         end
 
