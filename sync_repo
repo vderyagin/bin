@@ -32,7 +32,7 @@ if __FILE__ == $PROGRAM_NAME
         else next
         end
 
-      printf "in %s:\n", Dir.pwd
+      puts "in #{Dir.pwd}:"
       system(*command)
     end
   end
