@@ -11,9 +11,7 @@ Author: Victor Deryagin <vderyagin@gmail.com>
 =end
 
 def dir?(dir)
-  lambda { |directory, parent|
-    File.directory?(File.expand_path(directory, parent))
-  }.curry[dir]
+  ->(parent) { File.directory?(File.expand_path(dir, parent)) }
 end
 
 if __FILE__ == $PROGRAM_NAME
