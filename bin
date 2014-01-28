@@ -44,6 +44,7 @@ DART_SDK_URI =
   'https://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-linux-x64-release.zip'
 
 COPY_URI = 'https://copy.com/install/linux/Copy.tgz'
+EXERCISM_URI = 'https://github.com/exercism/cli/releases/download/v1.4.0/exercism-linux-amd64.tgz'
 
 SCRIPTS = {
   'git-wip' => 'https://raw.github.com/bartman/git-wip/master/git-wip',
@@ -244,6 +245,14 @@ class Bin < Thor
   desc 'unrar_free', 'make symlink unrar-gpl -> unrar-free'
   def unrar_free
     symlink_executable 'unrar-gpl', 'unrar-free'
+  end
+
+  desc 'exercism', 'download exercism executable (http://exercism.io)'
+  def exercism
+    in_temporary_directory do
+      download_file EXERCISM_URI, 'exercism.tgz'
+      system 'tar', '--extract', '--gzip', '--file', 'exercism.tgz', '--directory', BIN_DIR
+    end
   end
 
   no_commands do
