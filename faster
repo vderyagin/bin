@@ -75,7 +75,7 @@ class Command
         subcmd << '-acodec' << 'mp3'
         subcmd << '-filter:a' << "atempo=#{OPTIONS[:speed]}"
         subcmd << '{2}'
-        subcmd << ';' << 'rm {1}' unless OPTIONS[:keep_original]
+        subcmd << '&&' << 'rm {1}' unless OPTIONS[:keep_original]
       end.join(' ')
       cmd << ':::'
       cmd << files.map(&:original)
