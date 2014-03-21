@@ -3,48 +3,120 @@
 =begin
 
 Convert audio files to sped-up mp3.
-Shells out to ffmpeg(1).
+Shells out to parallel(1) and ffmpeg(1).
+
+If given more then one file to process, runs in parallel (number of jobs is
+the same as number of CPU cores).
 
 Created: 18 Apr 2013
 Author: Victor Deryagin <vderyagin@gmail.com>
 
 =end
 
+require 'forwardable'
 require 'optparse'
 require 'pathname'
 
-options = {
+OPTIONS = {
   speed: 2.0,
   dir: Pathname.new(Dir.pwd),
   keep_original: false,
   fat32: true,
 }
 
-parser = OptionParser.new do |opts|
+class AudioFile
+  extend Forwardable
+
+  def_delegator :@file, :exist?
+
+  def initialize(file)
+    @file = Pathname.new(file)
+  end
+
+  def extension
+    @file.extname
+  end
+
+  def sped_up_basename
+    "#{@file.basename(extension)}-#{OPTIONS[:speed]}x.mp3".tap do |basename|
+      basename.gsub!(/[:;\*\?"<>|]/, '_') if OPTIONS[:fat32]
+    end
+  end
+
+  def original
+    @file.to_s
+  end
+
+  def sped_up
+    (Pathname.new(OPTIONS[:dir]) + sped_up_basename).to_s
+  end
+end
+
+class Command
+  attr_reader :files, :command
+
+  def initialize(args)
+    @files = args.map(&AudioFile.method(:new)).select(&:exist?)
+
+    if @files.empty?
+      warn 'No files to process, exiting'
+      exit 1
+    end
+  end
+
+  def command
+    @command ||= [].tap do |cmd|
+      cmd << 'parallel'
+      cmd << '--xapply'
+      cmd << [].tap do |subcmd|
+        subcmd << 'ffmpeg'
+        subcmd << '-i' << '{1}'
+        subcmd << '-vn'
+        subcmd << '-acodec' << 'mp3'
+        subcmd << '-filter:a' << "atempo=#{OPTIONS[:speed]}"
+        subcmd << '{2}'
+        subcmd << ';' << 'rm {1}' unless OPTIONS[:keep_original]
+      end.join(' ')
+      cmd << ':::'
+      cmd << files.map(&:original)
+      cmd << ':::'
+      cmd << files.map(&:sped_up)
+    end.flatten
+  end
+
+  def execute
+    system(*command).tap do |result|
+      abort "command execution failed: #{command.inspect}" if result.nil?
+      abort 'non-zero exit status' unless result
+    end
+  end
+end
+
+PARSER = OptionParser.new do |opts|
   opts.banner = "Usage: #{File.basename($PROGRAM_NAME)} [options] FILE..."
 
   opts.on('-s SPEED', '--speed SPEED', Float,
-          "Specify speedup factor (0.5..2.0, default is #{options[:speed]})"
-          ) do |speed|
-    options[:speed] = speed.tap do |sp|
+          "Specify speedup factor (0.5..2.0, default is #{OPTIONS[:speed]})"
+         ) do |speed|
+    OPTIONS[:speed] = speed.tap do |sp|
       abort "ERROR: #{sp} is not within (0.5..2.0)" unless (0.5..2.0).cover?(sp)
     end
   end
 
   opts.on('-D DIR', '--output-directory DIR',
           'Directory to put converted files in, default is "."') do |dir|
-    options[:dir] = Pathname.new(File.expand_path(dir)).tap do |d|
+    OPTIONS[:dir] = Pathname.new(File.expand_path(dir)).tap do |d|
       abort "ERROR: '#{d}' is not a valid directory" unless d.directory?
     end
   end
 
   opts.on('--[no-]keep-original', 'Keep original files.') do |keep|
-    options[:keep_original] = keep
+    OPTIONS[:keep_original] = keep
   end
 
   opts.on('--[no-]fat32',
           'Replace characters forbidden in Fat32 in filenames.') do |fat32|
-    options[:fat32] = fat32
+    OPTIONS[:fat32] = fat32
   end
 
   opts.on '-h', '--help', 'Display this message' do
@@ -55,36 +127,7 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   ARGV << '--help' if ARGV.empty?
-  parser.parse!
+  PARSER.parse!
 
-  if ARGV.empty?
-    warn 'No files to process, exiting'
-    exit 1
-  end
-
-  ARGV.each do |file|
-    old = Pathname.new(file)
-    ext = old.extname
-
-    new_basename = "#{old.basename(ext)}-#{options[:speed]}x.mp3"
-    new_basename = new_basename.gsub(/[:;\*\?"<>|]/, '_') if options[:fat32]
-
-    new_location = options[:dir] + new_basename
-
-    cmd = []
-
-    cmd << 'ffmpeg'
-    cmd << '-i' << old.to_s
-    cmd << '-vn'                            # no video
-    cmd << '-acodec' << 'mp3'
-    cmd << '-filter:a' << "atempo=#{options[:speed]}"
-    cmd << new_location.to_s
-
-    system(*cmd).tap do |result|
-      abort "command execution failed: #{cmd.inspect}" if result.nil?
-      abort 'non-zero exit status' unless result
-    end
-
-    old.delete unless options[:keep_original]
-  end
+  Command.new(ARGV).execute
 end
