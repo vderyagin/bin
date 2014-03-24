@@ -53,7 +53,7 @@ class AudioFile
 end
 
 class Command
-  attr_reader :files, :command
+  attr_reader :files
 
   def initialize(args)
     @files = args.map(&AudioFile.method(:new)).select(&:exist?)
@@ -68,20 +68,24 @@ class Command
     @command ||= [].tap do |cmd|
       cmd << 'parallel'
       cmd << '--xapply'
-      cmd << [].tap do |subcmd|
-        subcmd << 'ffmpeg'
-        subcmd << '-i' << '{1}'
-        subcmd << '-vn'
-        subcmd << '-acodec' << 'mp3'
-        subcmd << '-filter:a' << "atempo=#{OPTIONS[:speed]}"
-        subcmd << '{2}'
-        subcmd << '&&' << 'rm {1}' unless OPTIONS[:keep_original]
-      end.join(' ')
+      cmd << subcommand
       cmd << ':::'
       cmd << files.map(&:original)
       cmd << ':::'
       cmd << files.map(&:sped_up)
     end.flatten
+  end
+
+  def subcommand
+    @subcommand ||= [].tap do |cmd|
+      cmd << 'ffmpeg'
+      cmd << '-i' << '{1}'
+      cmd << '-vn'
+      cmd << '-acodec' << 'mp3'
+      cmd << '-filter:a' << "atempo=#{OPTIONS[:speed]}"
+      cmd << '{2}'
+      cmd << '&&' << 'rm {1}' unless OPTIONS[:keep_original]
+    end.join(' ')
   end
 
   def execute
