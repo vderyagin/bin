@@ -28,6 +28,8 @@ BIN_DIR = File.expand_path('..', __FILE__)
 LIB_DIR = File.expand_path('lib', BIN_DIR)
 
 SBT_VERSION = '0.13.1'
+EXERCISM_VERSION = '1.5.1'
+ROCKBOX_UTILITY_VERSION = '1.4.0'
 
 SBT_LAUNCH_URI =
   "http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/#{SBT_VERSION}/sbt-launch.jar"
@@ -36,16 +38,20 @@ SBT_LAUNCH_URI =
 ODESK_TEAM_URI =
   'https://docs.google.com/uc?export=download&id=0B1NdDtEdfiQpTkRrOFREdTdNcnc'
 
-# v2.03 (September 21, 2013)
+# v2.15 (March 22, 2014)
 K2PDFOPT_URI =
-  'https://docs.google.com/uc?export=download&id=0B1NdDtEdfiQpSDJjLThWRnZuRU0'
+  'https://docs.google.com/uc?export=download&id=0B1NdDtEdfiQpbTZmQW1hU1NrR3c'
 
 DART_SDK_URI =
   'https://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-linux-x64-release.zip'
 
 COPY_URI = 'https://copy.com/install/linux/Copy.tgz'
-EXERCISM_URI = 'https://github.com/exercism/cli/releases/download/v1.4.0/exercism-linux-amd64.tgz'
-ROCKBOX_URI = 'http://download.rockbox.org/rbutil/linux/RockboxUtility-v1.4.0-64bit.tar.bz2'
+
+EXERCISM_URI =
+  "https://github.com/exercism/cli/releases/download/v#{EXERCISM_VERSION}/exercism-linux-amd64.tgz"
+
+ROCKBOX_UTILITY_URI =
+  "http://download.rockbox.org/rbutil/linux/RockboxUtility-v#{ROCKBOX_UTILITY_VERSION}-64bit.tar.bz2"
 
 SCRIPTS = {
   'git-wip' => 'https://raw.github.com/bartman/git-wip/master/git-wip',
@@ -251,7 +257,8 @@ class Bin < Thor
 
   desc 'rockbox', 'download and install Rockbox Utility (http://www.rockbox.org/wiki/RockboxUtility)'
   def rockbox
-    download_file ROCKBOX_URI, 'rockbox.tar.bz2' do |archive|
+    download_file ROCKBOX_UTILITY_URI, 'rockbox.tar.bz2' do |archive|
+      FileUtils.rm_f location_of('RockboxUtility')
       system 'tar', '--extract', '--bzip2', '--file', archive
       FileUtils.cp Dir['*/RockboxUtility'].first, BIN_DIR
     end
