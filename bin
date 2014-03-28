@@ -110,6 +110,7 @@ module Helpers
 
   def download_file(uri, target)
     system 'wget', String(uri), '-O', target
+    yield target
   end
 
   def in_github_repo(repo, &block)
@@ -167,13 +168,12 @@ class Bin < Thor
   def odeskteam
     ensure_directory_exists LIB_DIR
 
-    dist_location =  File.expand_path('odeskteam-3.2.13-1-x86_64', LIB_DIR)
+    FileUtils.rm_rf File.expand_path('odeskteam-3.2.13-1-x86_64', LIB_DIR)
 
     in_temporary_directory do
-      target = File.expand_path('odeskteam.zip', Dir.pwd)
-      download_file ODESK_TEAM_URI, target
-      FileUtils.rm_rf dist_location
-      system 'unzip', target, '-d', LIB_DIR
+      download_file ODESK_TEAM_URI, 'odeskteam.zip' do |archive|
+        system 'unzip', archive, '-d', LIB_DIR
+      end
     end
   end
 
@@ -189,13 +189,12 @@ class Bin < Thor
   def dart
     ensure_directory_exists LIB_DIR
 
-    dist_location = File.expand_path('dart-sdk', LIB_DIR)
+    FileUtils.rm_rf File.expand_path('dart-sdk', LIB_DIR)
 
     in_temporary_directory do
-      target = File.expand_path('dart-sdk', Dir.pwd)
-      download_file DART_SDK_URI, target
-      FileUtils.rm_rf dist_location
-      system 'unzip', target, '-d', LIB_DIR
+      download_file DART_SDK_URI, 'dart-sdk.zip' do |archive|
+        system 'unzip', archive, '-d', LIB_DIR
+      end
     end
   end
 
@@ -203,13 +202,12 @@ class Bin < Thor
   def copy
     ensure_directory_exists LIB_DIR
 
-    dist_location = File.expand_path('copy', LIB_DIR)
+    FileUtils.rm_rf File.expand_path('copy', LIB_DIR)
 
     in_temporary_directory do
-      target = File.expand_path('copy', Dir.pwd)
-      download_file COPY_URI, target
-      FileUtils.rm_rf dist_location
-      system 'tar', '--extract', '--gzip', '--file', target, '--directory', LIB_DIR
+      download_file COPY_URI, 'copy.tgz' do |archive|
+        system 'tar', '--extract', '--gzip', '--file', archive, '--directory', LIB_DIR
+      end
     end
   end
 
@@ -251,8 +249,12 @@ class Bin < Thor
   desc 'exercism', 'download exercism executable (http://exercism.io)'
   def exercism
     in_temporary_directory do
-      download_file EXERCISM_URI, 'exercism.tgz'
-      system 'tar', '--extract', '--gzip', '--file', 'exercism.tgz', '--directory', BIN_DIR
+      download_file EXERCISM_URI, 'exercism.tgz' do |archive|
+        system 'tar', '--extract', '--gzip', '--file', archive, '--directory', BIN_DIR
+      end
+    end
+  end
+
   desc 'rockbox', 'download and install Rockbox Utility (http://www.rockbox.org/wiki/RockboxUtility)'
   def rockbox
     in_temporary_directory do
