@@ -45,6 +45,7 @@ DART_SDK_URI =
 
 COPY_URI = 'https://copy.com/install/linux/Copy.tgz'
 EXERCISM_URI = 'https://github.com/exercism/cli/releases/download/v1.4.0/exercism-linux-amd64.tgz'
+ROCKBOX_URI = 'http://download.rockbox.org/rbutil/linux/RockboxUtility-v1.4.0-64bit.tar.bz2'
 
 SCRIPTS = {
   'git-wip' => 'https://raw.github.com/bartman/git-wip/master/git-wip',
@@ -252,6 +253,13 @@ class Bin < Thor
     in_temporary_directory do
       download_file EXERCISM_URI, 'exercism.tgz'
       system 'tar', '--extract', '--gzip', '--file', 'exercism.tgz', '--directory', BIN_DIR
+  desc 'rockbox', 'download and install Rockbox Utility (http://www.rockbox.org/wiki/RockboxUtility)'
+  def rockbox
+    in_temporary_directory do
+      download_file ROCKBOX_URI, 'rockbox.tar.bz2' do |archive|
+        system 'tar', '--extract', '--bzip2', '--file', archive
+        FileUtils.cp Dir['*/RockboxUtility'].first, BIN_DIR
+      end
     end
   end
 
