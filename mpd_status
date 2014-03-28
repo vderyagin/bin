@@ -26,9 +26,10 @@ artist, album, title, date, rest = output.split "\n"
 notification = "#{artist} - #{title}\n#{album} (#{date})\n#{time}"
 icon = File.expand_path "~/.icons/#{state}.png"
 
-command = []
-command << 'notify-send'
-command << notification
-command << "--icon=#{icon}" if File.exists? icon
+command = [].tap do |cmd|
+  cmd << 'notify-send'
+  cmd << notification
+  cmd << "--icon=#{icon}" if File.exist? icon
+end
 
 IO.popen command
