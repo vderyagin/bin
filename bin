@@ -109,8 +109,10 @@ module Helpers
   end
 
   def download_file(uri, target)
-    system 'wget', String(uri), '-O', target
-    yield target
+    in_temporary_directory do
+      system 'wget', String(uri), '-O', target
+      yield target
+    end
   end
 
   def in_github_repo(repo, &block)
@@ -158,10 +160,10 @@ class Bin < Thor
   def sbt
     ensure_directory_exists LIB_DIR
 
-    target = File.expand_path('sbt-launch.jar', LIB_DIR)
-    FileUtils.rm_f target
-
-    download_file SBT_LAUNCH_URI, target
+    download_file SBT_LAUNCH_URI, 'sbt-launch.jar' do |jar|
+      FileUtils.rm_f File.expand_path(File.basename(jar), LIB_DIR)
+      FileUtils.cp jar, LIB_DIR
+    end
   end
 
   desc 'odeskteam', 'install "oDesk Team" application (https://www.odesk.com/downloads)'
@@ -170,18 +172,16 @@ class Bin < Thor
 
     FileUtils.rm_rf File.expand_path('odeskteam-3.2.13-1-x86_64', LIB_DIR)
 
-    in_temporary_directory do
-      download_file ODESK_TEAM_URI, 'odeskteam.zip' do |archive|
-        system 'unzip', archive, '-d', LIB_DIR
-      end
+    download_file ODESK_TEAM_URI, 'odeskteam.zip' do |archive|
+      system 'unzip', archive, '-d', LIB_DIR
     end
   end
 
   desc 'k2pdfopt', 'install k2pdfopt (http://www.willus.com/k2pdfopt/)'
   def k2pdfopt
-    location_of('k2pdfopt').tap do |k2pdfopt|
-      download_file K2PDFOPT_URI, k2pdfopt
-      File.chmod 0744, k2pdfopt
+    download_file K2PDFOPT_URI, 'k2pdfopt' do |binary|
+      File.chmod 0744, binary
+      FileUtils.cp binary, BIN_DIR
     end
   end
 
@@ -191,10 +191,8 @@ class Bin < Thor
 
     FileUtils.rm_rf File.expand_path('dart-sdk', LIB_DIR)
 
-    in_temporary_directory do
-      download_file DART_SDK_URI, 'dart-sdk.zip' do |archive|
-        system 'unzip', archive, '-d', LIB_DIR
-      end
+    download_file DART_SDK_URI, 'dart-sdk.zip' do |archive|
+      system 'unzip', archive, '-d', LIB_DIR
     end
   end
 
@@ -204,10 +202,8 @@ class Bin < Thor
 
     FileUtils.rm_rf File.expand_path('copy', LIB_DIR)
 
-    in_temporary_directory do
-      download_file COPY_URI, 'copy.tgz' do |archive|
-        system 'tar', '--extract', '--gzip', '--file', archive, '--directory', LIB_DIR
-      end
+    download_file COPY_URI, 'copy.tgz' do |archive|
+      system 'tar', '--extract', '--gzip', '--file', archive, '--directory', LIB_DIR
     end
   end
 
@@ -248,20 +244,16 @@ class Bin < Thor
 
   desc 'exercism', 'download exercism executable (http://exercism.io)'
   def exercism
-    in_temporary_directory do
-      download_file EXERCISM_URI, 'exercism.tgz' do |archive|
-        system 'tar', '--extract', '--gzip', '--file', archive, '--directory', BIN_DIR
-      end
+    download_file EXERCISM_URI, 'exercism.tgz' do |archive|
+      system 'tar', '--extract', '--gzip', '--file', archive, '--directory', BIN_DIR
     end
   end
 
   desc 'rockbox', 'download and install Rockbox Utility (http://www.rockbox.org/wiki/RockboxUtility)'
   def rockbox
-    in_temporary_directory do
-      download_file ROCKBOX_URI, 'rockbox.tar.bz2' do |archive|
-        system 'tar', '--extract', '--bzip2', '--file', archive
-        FileUtils.cp Dir['*/RockboxUtility'].first, BIN_DIR
-      end
+    download_file ROCKBOX_URI, 'rockbox.tar.bz2' do |archive|
+      system 'tar', '--extract', '--bzip2', '--file', archive
+      FileUtils.cp Dir['*/RockboxUtility'].first, BIN_DIR
     end
   end
 
