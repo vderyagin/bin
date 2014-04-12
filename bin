@@ -169,7 +169,7 @@ class Bin < Thor
     end
   end
 
-  desc 'sbt', 'get jar needed to run sbt'
+  desc 'sbt', 'get jar needed to run sbt (http://www.scala-sbt.org)'
   def sbt
     ensure_directory_exists LIB_DIR
 
@@ -229,7 +229,7 @@ class Bin < Thor
     end
   end
 
-  desc 'skb', 'download skb source and build it'
+  desc 'skb', 'download skb source and build it (https://github.com/polachok/skb)'
   def skb
     in_github_repo 'polachok/skb' do
       system 'make', 'skb'
@@ -237,7 +237,7 @@ class Bin < Thor
     end
   end
 
-  desc 'dzen2', 'download dzen2 source and build it'
+  desc 'dzen2', 'download dzen2 source and build it (https://github.com/robm/dzen)'
   def dzen2
     in_github_repo 'robm/dzen' do
       system 'make'
