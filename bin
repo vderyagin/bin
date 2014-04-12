@@ -53,6 +53,8 @@ EXERCISM_URI =
 ROCKBOX_UTILITY_URI =
   "http://download.rockbox.org/rbutil/linux/RockboxUtility-v#{ROCKBOX_UTILITY_VERSION}-64bit.tar.bz2"
 
+CAMLISTORE_REPO_URI = 'https://camlistore.googlesource.com/camlistore'
+
 SCRIPTS = {
   'git-wip' => 'https://raw.github.com/bartman/git-wip/master/git-wip',
   'hub' => 'http://hub.github.com/standalone',
@@ -266,6 +268,17 @@ class Bin < Thor
       FileUtils.rm_f location_of('RockboxUtility')
       system 'tar', '--extract', '--bzip2', '--file', archive
       FileUtils.cp Dir['*/RockboxUtility'].first, BIN_DIR
+    end
+  end
+
+  desc 'camlistore', 'download and install camlistore (http://camlistore.org)'
+  def camlistore
+    in_git_repo CAMLISTORE_REPO_URI do
+      system 'go', 'run', 'make.go'
+
+      Dir['bin/*']
+        .select(&method(:executable?))
+        .each(&method(:place_binary))
     end
   end
 
