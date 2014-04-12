@@ -15,6 +15,7 @@ Shells out to:
   file(1)
   gcc(1)
   git(1)
+  go(1)
   make(1)
   strip(1)
   tar(1)
