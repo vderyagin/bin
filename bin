@@ -96,7 +96,7 @@ module Helpers
   end
 
   def location_of(executable)
-    File.expand_path(executable.to_s, BIN_DIR)
+    File.expand_path(File.basename(executable.to_s), BIN_DIR)
   end
 
   def strip_binaries
