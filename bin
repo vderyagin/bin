@@ -81,6 +81,11 @@ module Helpers
     FileUtils.cp name, binary
   end
 
+  def executable?(file)
+    stat = File.stat(file)
+    stat.file? && stat.executable?
+  end
+
   def symlink_executable(from, to)
     IO.popen ['which', from] do |io|
       source = io.read.chomp
