@@ -268,7 +268,7 @@ class Bin < Thor
     download_file ROCKBOX_UTILITY_URI, 'rockbox.tar.bz2' do |archive|
       FileUtils.rm_f location_of('RockboxUtility')
       system 'tar', '--extract', '--bzip2', '--file', archive
-      FileUtils.cp Dir['*/RockboxUtility'].first, BIN_DIR
+      place_binary Dir['*/RockboxUtility'].first
     end
   end
 
