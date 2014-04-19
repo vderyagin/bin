@@ -28,7 +28,7 @@ Shells out to:
 BIN_DIR = File.expand_path('..', __FILE__)
 LIB_DIR = File.expand_path('lib', BIN_DIR)
 
-SBT_VERSION = '0.13.1'
+SBT_VERSION = '0.13.2'
 EXERCISM_VERSION = '1.5.1'
 ROCKBOX_UTILITY_VERSION = '1.4.0'
 
