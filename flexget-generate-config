@@ -31,7 +31,7 @@ end
 def output
   {
     'tasks' => tasks,
-    'presets' => presets
+    'templates' => templates
   }
 end
 
@@ -39,7 +39,7 @@ def tasks
   input.each_with_object({}) do |(category, list), task|
     list.each do |name, url|
       task[name] = {
-        'preset' => category.chomp('s'),
+        'template' => category.chomp('s'),
         'rss' => url_for(category, url)
       }
     end
@@ -57,7 +57,7 @@ def url_for(category, string)
   end
 end
 
-def presets
+def templates
   {
     'video-feed' => {
       'download' => ENV['VIDEO_DOWNLOAD_DIR'] || default_download_dir
@@ -67,7 +67,6 @@ def presets
     },
     'youtube' => {
       'exec' => {
-        'auto_escape' => true,
         'on_output' => {
           'for_accepted' => 'yt {{url}}'
         }
