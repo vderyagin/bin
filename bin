@@ -309,6 +309,10 @@ class Bin < Thor
 
   desc 'heroku', 'download and install Heroku client (https://github.com/heroku/heroku)'
   def heroku
+    ensure_directory_exists LIB_DIR
+
+    FileUtils.rm_rf File.expand_path('heroku-client', LIB_DIR)
+
     download_file HEROKU_CLIENT_URI, 'heroku-client.tgz' do |archive|
       system 'tar', '--extract', '--gzip', '--file', archive, '--directory', LIB_DIR
     end
