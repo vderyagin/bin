@@ -56,6 +56,9 @@ ROCKBOX_UTILITY_URI =
 
 CAMLISTORE_REPO_URI = 'https://camlistore.googlesource.com/camlistore'
 
+GOOGLE_CLOUD_SDK_URI =
+  'https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.zip'
+
 SCRIPTS = {
   'git-wip' => 'https://raw.github.com/bartman/git-wip/master/git-wip',
   'hub' => 'http://hub.github.com/standalone',
@@ -281,6 +284,24 @@ class Bin < Thor
         .select(&method(:executable?))
         .each(&method(:place_binary))
     end
+  end
+
+  desc 'gcloud', 'download and install Google Cloud SDK (https://developers.google.com/cloud/sdk)'
+  def gcloud
+    download_file GOOGLE_CLOUD_SDK_URI, 'google-cloud-sdk.zip' do |archive|
+      system 'unzip', archive, '-d', LIB_DIR
+    end
+
+    install_cmd = [].tap do |cmd|
+      cmd << File.expand_path('google-cloud-sdk/install.sh', LIB_DIR)
+      cmd << '--usage-reporting' << 'true'
+      cmd << '--rc-path' << '/dev/null'
+      cmd << '--bash-completion' << 'false'
+      cmd << '--path-update' << 'false'
+      cmd << '--disable-installation-options'
+    end
+
+    system(*install_cmd)
   end
 
   no_commands do
