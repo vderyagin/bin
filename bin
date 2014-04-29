@@ -59,6 +59,9 @@ CAMLISTORE_REPO_URI = 'https://camlistore.googlesource.com/camlistore'
 GOOGLE_CLOUD_SDK_URI =
   'https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.zip'
 
+HEROKU_CLIENT_URI =
+  'http://assets.heroku.com/heroku-client/heroku-client.tgz'
+
 SCRIPTS = {
   'git-wip' => 'https://raw.github.com/bartman/git-wip/master/git-wip',
   'hub' => 'http://hub.github.com/standalone',
@@ -302,6 +305,13 @@ class Bin < Thor
     end
 
     system(*install_cmd)
+  end
+
+  desc 'heroku', 'download and install Heroku client (https://github.com/heroku/heroku)'
+  def heroku
+    download_file HEROKU_CLIENT_URI, 'heroku-client.tgz' do |archive|
+      system 'tar', '--extract', '--gzip', '--file', archive, '--directory', LIB_DIR
+    end
   end
 
   no_commands do
