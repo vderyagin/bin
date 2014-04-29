@@ -16,8 +16,20 @@ bundle
 
 ## Set up environment variables ##
 
-(in `~/.zshrc`, assuming repository is located in `~/bin`)
+(assuming repository is located in `~/bin`)
+
+### zsh ###
+
+in `~/.zshrc`:
 
 ```sh
 source "${HOME}/bin/init.zsh"
+```
+
+### bash ###
+
+in `~/.bash_profile`:
+
+```sh
+source "${HOME}/bin/init.bash"
 ```
