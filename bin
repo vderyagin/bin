@@ -291,6 +291,10 @@ class Bin < Thor
 
   desc 'gcloud', 'download and install Google Cloud SDK (https://developers.google.com/cloud/sdk)'
   def gcloud
+    ensure_directory_exists LIB_DIR
+
+    FileUtils.rm_rf File.expand_path('google-cloud-sdk', LIB_DIR)
+
     download_file GOOGLE_CLOUD_SDK_URI, 'google-cloud-sdk.zip' do |archive|
       system 'unzip', archive, '-d', LIB_DIR
     end
