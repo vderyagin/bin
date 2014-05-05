@@ -8,6 +8,12 @@ path=(
   $path
 )
 
-declare -U path
+fpath=(
+  "${HOME}/bin/lib/zsh-completions/src"
+  $fpath
+)
 
 source "${HOME}/bin/lib/google-cloud-sdk/completion.zsh.inc"
+
+declare -U path
+declare -U fpath

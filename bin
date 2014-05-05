@@ -62,6 +62,8 @@ GOOGLE_CLOUD_SDK_URI =
 HEROKU_CLIENT_URI =
   'http://assets.heroku.com/heroku-client/heroku-client.tgz'
 
+ZSH_COMPLETIONS_URI = 'git://github.com/zsh-users/zsh-completions.git'
+
 SCRIPTS = {
   'git-wip' => 'https://raw.github.com/bartman/git-wip/master/git-wip',
   'hub' => 'http://hub.github.com/standalone',
@@ -319,6 +321,21 @@ class Bin < Thor
 
     download_file HEROKU_CLIENT_URI, 'heroku-client.tgz' do |archive|
       system 'tar', '--extract', '--gzip', '--file', archive, '--directory', LIB_DIR
+    end
+  end
+
+  desc 'zsh_completions', 'clone zsh-completions repository'
+  def zsh_completions
+    ensure_directory_exists LIB_DIR
+
+    dir = File.expand_path('zsh-completions', LIB_DIR)
+
+    if File.directory?(dir)
+      Dir.chdir dir do
+        system 'git', 'pull'
+      end
+    else
+      system 'git', 'clone', ZSH_COMPLETIONS_URI, dir
     end
   end
 
