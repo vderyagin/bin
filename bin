@@ -142,7 +142,7 @@ module Helpers
   end
 
   def in_git_repo(uri, &block)
-    repo_dir =  uri[/(?<=\/)[^\/]+(?=(\.git)?\z)/] || 'git_repo'
+    repo_dir =  uri[%r{(?<=/)[^/]+(?=(\.git)?\z)}] || 'git_repo'
 
     in_temporary_directory do
       system 'git', 'clone', uri, repo_dir
