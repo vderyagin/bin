@@ -25,7 +25,7 @@ Shells out to:
 
 =end
 
-BIN_DIR = File.expand_path('..', __FILE__)
+BIN_DIR = __dir__
 LIB_DIR = File.expand_path('lib', BIN_DIR)
 
 SBT_VERSION = '0.13.2'
@@ -162,9 +162,51 @@ module Helpers
 end
 
 class Bin < Thor
+  desc 'init', 'output zsh code for initialization of needed env variables'
+  def init
+    print <<-EOS
+path=(
+  "#{BIN_DIR}"
+  "#{BIN_DIR}/lib/copy/x86_64"
+  "#{BIN_DIR}/lib/dart-sdk/bin"
+  "#{BIN_DIR}/lib/google-cloud-sdk/bin"
+  "#{BIN_DIR}/lib/heroku-client/bin"
+  "#{BIN_DIR}/lib/odeskteam-3.2.13-1-x86_64/usr/bin"
+  $path
+)
+
+fpath=(
+  "#{BIN_DIR}/lib/zsh-completions/src"
+  $fpath
+)
+
+source "#{BIN_DIR}/lib/google-cloud-sdk/completion.zsh.inc"
+
+declare -U path
+declare -U fpath
+     EOS
+  end
+
   desc 'all', 'do everyting'
   def all
-    invoke_all
+    scripts
+    sbt
+    odeskteam
+    k2pdfopt
+    dart
+    copy
+    emxkb
+    skb
+    dzen2
+    hsmarkdown
+    unrar_free
+    exercism
+    rockbox
+    camlistore
+    gcloud
+    heroku
+    zsh_completions
+
     strip_binaries
   end
 
