@@ -4,7 +4,7 @@ require 'forwardable'
 require 'pathname'
 require 'thor'
 
-DOT_ROOT = Pathname.new(File.expand_path('~/dotfiles'))
+DOT_ROOT = Pathname.new(ENV.fetch('DOTFILES_DIR', File.expand_path('~/.dotfiles')))
 HOME = Pathname.new(Dir.home)
 
 module Helpers
