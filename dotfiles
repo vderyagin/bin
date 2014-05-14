@@ -90,7 +90,7 @@ class Dotfile
   end
 
   def symlink_missing?
-    !symlink.exist?
+    !(symlink.exist? || symlink.symlink?)
   end
 
   def symlink_overwritten?
