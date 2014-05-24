@@ -66,8 +66,8 @@ ZSH_COMPLETIONS_URI = 'git://github.com/zsh-users/zsh-completions.git'
 
 SCRIPTS = {
   'git-wip' => 'https://raw.github.com/bartman/git-wip/master/git-wip',
-  'hub' => 'http://hub.github.com/standalone',
-  'lein' => 'https://raw.github.com/technomancy/leiningen/stable/bin/lein',
+  'hub'     => 'http://hub.github.com/standalone',
+  'lein'    => 'https://raw.github.com/technomancy/leiningen/stable/bin/lein',
 }
 
 module Helpers

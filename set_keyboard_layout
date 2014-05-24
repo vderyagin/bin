@@ -1,0 +1,32 @@
+#! /bin/sh
+
+LANG=$1
+
+if [ -z "$LANG" ]; then
+  LANGUAGES="english
+ukrainian
+russian"
+
+  BG='#d0d0d0'
+  FG='#333333'
+  FONT='Consolas-12:normal'
+  PRMPT='Keyboard layout:'
+  LANG=$(echo "$LANGUAGES" | dmenu -b -l 5 -p "$PRMPT" -nb $BG -nf $FG -sb $FG -sf $BG -fn $FONT)
+fi
+
+case $LANG in
+  (english)
+    emxkb 0
+    ;;
+  (ukrainian)
+    emxkb 1
+    ;;
+  (russian)
+    emxkb 2
+    ;;
+  ('')                                    # Exited before choosing any option, do nothing.
+    ;;
+  (*)
+    emxkb 0                               # When in doubt, switch to English.
+    ;;
+esac
