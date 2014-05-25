@@ -103,14 +103,6 @@ class Dotfile
 end
 
 class Dotfiles < Thor
-  desc 'link FILE...', 'link specified dotfiles'
-  def link(*files)
-    files
-      .map(&Dotfile.method(:from_symlink))
-      .reject(&:symlinked_correctly?)
-      .each(&:make_symlink)
-  end
-
   desc 'link_all', 'link all dotfiles to home directory'
   def link_all
     dotfiles.reject(&:symlinked_correctly?).each(&:make_symlink)
