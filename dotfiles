@@ -103,26 +103,26 @@ class Dotfile
 end
 
 class Dotfiles < Thor
-  desc 'link_all', 'link all dotfiles to home directory'
+  desc 'link_all', 'Link all dotfiles to home directory'
   def link_all
     dotfiles.reject(&:symlinked_correctly?).each(&:make_symlink)
   end
 
-  desc 'list', 'list managed files'
+  desc 'list', 'List managed files'
   def list
     dotfiles.map(&:status).each do |status|
       say_status status.name, status.message, status.color
     end
   end
 
-  desc 'manage FILE...', 'add files to repository'
+  desc 'manage FILE...', 'Add files to repository'
   def manage(*files)
     files
       .map(&Dotfile.method(:from_symlink))
       .each(&:create)
   end
 
-  desc 'unmanage FILE...', 'remove files from repository'
+  desc 'unmanage FILE...', 'Remove files from repository'
   def unmanage(*files)
     files
       .map(&Dotfile.method(:from_symlink))
