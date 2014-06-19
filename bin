@@ -64,6 +64,9 @@ HEROKU_CLIENT_URI =
 
 ZSH_COMPLETIONS_URI = 'git://github.com/zsh-users/zsh-completions.git'
 
+TRAVIS_COMPLETION_URI =
+  'https://raw.githubusercontent.com/travis-ci/travis.rb/master/assets/travis.sh'
+
 SCRIPTS = {
   'git-wip' => 'https://raw.github.com/bartman/git-wip/master/git-wip',
   'hub'     => 'http://hub.github.com/standalone',
@@ -181,6 +184,7 @@ fpath=(
 )
 
 source "#{BIN_DIR}/lib/google-cloud-sdk/completion.zsh.inc"
+source "#{BIN_DIR}/lib/travis.sh"
 
 declare -U path
 declare -U fpath
@@ -206,6 +210,7 @@ declare -U fpath
     gcloud
     heroku
     zsh_completions
+    travis_completion
 
     strip_binaries
   end
@@ -379,6 +384,14 @@ declare -U fpath
     else
       system 'git', 'clone', ZSH_COMPLETIONS_URI, dir
     end
+  end
+
+  desc 'travis_completion', 'install travis shell completion script'
+  def travis_completion
+    ensure_directory_exists LIB_DIR
+    target = File.expand_path('travis.sh', LIB_DIR)
+
+    File.write target, url_content(TRAVIS_COMPLETION_URI)
   end
 
   no_commands do
