@@ -65,8 +65,10 @@ HEROKU_CLIENT_URI =
 ZSH_COMPLETIONS_URI = 'git://github.com/zsh-users/zsh-completions.git'
 
 GIT_WIP_URI = 'https://raw.github.com/bartman/git-wip/master/git-wip'
+
 HUB_URI ='http://hub.github.com/standalone'
-LEIN_URI = 'https://raw.github.com/technomancy/leiningen/stable/bin/lein',
+
+LEIN_URI = 'https://raw.github.com/technomancy/leiningen/stable/bin/lein'
 
 module Helpers
   def replace_executable(file, content)
