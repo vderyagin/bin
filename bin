@@ -205,17 +205,17 @@ declare -U fpath
 
   desc 'git_wip', 'download and install git-wip script'
   def git_wip
-    replace_executable 'git-wip', open(GIT_WIP_URI).read
+    replace_executable location_of('git-wip'), open(GIT_WIP_URI).read
   end
 
   desc 'hub', 'download and install hub script'
   def hub
-    replace_executable 'hub', open(HUB_URI).read
+    replace_executable location_of('hub'), open(HUB_URI).read
   end
 
   desc 'git_wip', 'download and install lein'
   def lein
-    replace_executable 'lein', open(LEIN_URI).read
+    replace_executable location_of('lein'), open(LEIN_URI).read
   end
 
   desc 'sbt', 'get jar needed to run sbt (http://www.scala-sbt.org)'
