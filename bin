@@ -64,22 +64,11 @@ HEROKU_CLIENT_URI =
 
 ZSH_COMPLETIONS_URI = 'git://github.com/zsh-users/zsh-completions.git'
 
-SCRIPTS = {
-  'git-wip' => 'https://raw.github.com/bartman/git-wip/master/git-wip',
-  'hub'     => 'http://hub.github.com/standalone',
-  'lein'    => 'https://raw.github.com/technomancy/leiningen/stable/bin/lein',
-}
+GIT_WIP_URI = 'https://raw.github.com/bartman/git-wip/master/git-wip'
+HUB_URI ='http://hub.github.com/standalone'
+LEIN_URI = 'https://raw.github.com/technomancy/leiningen/stable/bin/lein',
 
 module Helpers
-  def url_content(url)
-    content = open(url).read
-  rescue StandardError => err
-    say "failed: #{err.message}"
-  else
-    say 'done'
-    content
-  end
-
   def replace_executable(file, content)
     FileUtils.rm_f file
     File.write file, content
@@ -189,7 +178,9 @@ declare -U fpath
 
   desc 'all', 'do everyting'
   def all
-    scripts
+    git_wip
+    hub
+    lein
     sbt
     odeskteam
     k2pdfopt
@@ -210,14 +201,19 @@ declare -U fpath
     strip_binaries
   end
 
-  desc 'scripts', 'update all scripts'
-  def scripts
-    SCRIPTS.each do |script, location|
-      file = location_of(script)
-      say "updating #{script}... "
-      content = url_content(location)
-      replace_executable(file, content) if content
-    end
+  desc 'git_wip', 'download and install git-wip script'
+  def git_wip
+    replace_executable 'git-wip', open(GIT_WIP_URI).read
+  end
+
+  desc 'hub', 'download and install hub script'
+  def hub
+    replace_executable 'hub', open(HUB_URI).read
+  end
+
+  desc 'git_wip', 'download and install lein'
+  def lein
+    replace_executable 'lein', open(LEIN_URI).read
   end
 
   desc 'sbt', 'get jar needed to run sbt (http://www.scala-sbt.org)'
