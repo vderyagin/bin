@@ -199,6 +199,7 @@ declare -U fpath
     gcloud
     heroku
     zsh_completions
+    wrk
 
     strip_binaries
   end
@@ -376,6 +377,14 @@ declare -U fpath
       end
     else
       system 'git', 'clone', ZSH_COMPLETIONS_URI, dir
+    end
+  end
+
+  desc 'wrk', 'Install wrk HTTP benchmarking tool'
+  def wrk
+    in_github_repo 'wg/wrk' do
+      system 'make'
+      place_binary 'wrk'
     end
   end
 
