@@ -28,49 +28,7 @@ Shells out to:
 BIN_DIR = __dir__
 LIB_DIR = File.expand_path('lib', BIN_DIR)
 
-SBT_VERSION = '0.13.5'
-EXERCISM_VERSION = '1.6.2'
-ROCKBOX_UTILITY_VERSION = '1.4.0'
-
-SBT_LAUNCH_URI =
-  "http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/#{SBT_VERSION}/sbt-launch.jar"
-
-# v3.2.13-1-x86_64
-ODESK_TEAM_URI =
-  'https://docs.google.com/uc?export=download&id=0B1NdDtEdfiQpTkRrOFREdTdNcnc'
-
-# v2.15 (March 22, 2014)
-K2PDFOPT_URI =
-  'https://docs.google.com/uc?export=download&id=0B1NdDtEdfiQpbTZmQW1hU1NrR3c'
-
-DART_SDK_URI =
-  'https://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-linux-x64-release.zip'
-
-COPY_URI = 'https://copy.com/install/linux/Copy.tgz'
-
-EXERCISM_URI =
-  "https://github.com/exercism/cli/releases/download/v#{EXERCISM_VERSION}/exercism-linux-amd64.tgz"
-
-ROCKBOX_UTILITY_URI =
-  "http://download.rockbox.org/rbutil/linux/RockboxUtility-v#{ROCKBOX_UTILITY_VERSION}-64bit.tar.bz2"
-
-CAMLISTORE_REPO_URI = 'https://camlistore.googlesource.com/camlistore'
-
-GOOGLE_CLOUD_SDK_URI =
-  'https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.zip'
-
-HEROKU_CLIENT_URI =
-  'http://assets.heroku.com/heroku-client/heroku-client.tgz'
-
-ZSH_COMPLETIONS_URI = 'git://github.com/zsh-users/zsh-completions.git'
-
-GIT_WIP_URI = 'https://raw.github.com/bartman/git-wip/master/git-wip'
-
-HUB_URI ='http://hub.github.com/standalone'
-
-LEIN_URI = 'https://raw.github.com/technomancy/leiningen/stable/bin/lein'
-
-NGROK_URI = 'https://api.equinox.io/1/Applications/ap_pJSFC5wQYkAyI0FIVwKYs9h1hW/Updates/Asset/ngrok.zip?os=linux&arch=386&channel=stable'
+SRC = YAML.load_file(File.expand_path('sources.yml', BIN_DIR))
 
 module Helpers
   def replace_executable(file, content)
@@ -208,24 +166,24 @@ declare -U fpath
 
   desc 'git_wip', 'download and install git-wip script (https://github.com/bartman/git-wip)'
   def git_wip
-    replace_executable location_of('git-wip'), open(GIT_WIP_URI).read
+    replace_executable location_of('git-wip'), open(SRC['git-wip']).read
   end
 
   desc 'hub', 'download and install hub script (http://hub.github.com)'
   def hub
-    replace_executable location_of('hub'), open(HUB_URI).read
+    replace_executable location_of('hub'), open(SRC['hub']).read
   end
 
   desc 'lein', 'download and install lein (http://leiningen.org)'
   def lein
-    replace_executable location_of('lein'), open(LEIN_URI).read
+    replace_executable location_of('lein'), open(SRC['lein']).read
   end
 
   desc 'sbt', 'get jar needed to run sbt (http://www.scala-sbt.org)'
   def sbt
     ensure_directory_exists LIB_DIR
 
-    download_file SBT_LAUNCH_URI, 'sbt-launch.jar' do |jar|
+    download_file SRC['sbt'], 'sbt-launch.jar' do |jar|
       FileUtils.rm_f File.expand_path(File.basename(jar), LIB_DIR)
       FileUtils.cp jar, LIB_DIR
     end
@@ -237,14 +195,14 @@ declare -U fpath
 
     FileUtils.rm_rf File.expand_path('odeskteam-3.2.13-1-x86_64', LIB_DIR)
 
-    download_file ODESK_TEAM_URI, 'odeskteam.zip' do |archive|
+    download_file SRC['odeskteam'], 'odeskteam.zip' do |archive|
       system 'unzip', archive, '-d', LIB_DIR
     end
   end
 
   desc 'k2pdfopt', 'install k2pdfopt (http://www.willus.com/k2pdfopt/)'
   def k2pdfopt
-    download_file K2PDFOPT_URI, 'k2pdfopt' do |binary|
+    download_file SRC['k2pdfopt'], 'k2pdfopt' do |binary|
       FileUtils.rm_f location_of('k2pdfopt')
       File.chmod 0744, binary
       FileUtils.cp binary, BIN_DIR
@@ -257,7 +215,7 @@ declare -U fpath
 
     FileUtils.rm_rf File.expand_path('dart-sdk', LIB_DIR)
 
-    download_file DART_SDK_URI, 'dart-sdk.zip' do |archive|
+    download_file SRC['dart'], 'dart-sdk.zip' do |archive|
       system 'unzip', archive, '-d', LIB_DIR
     end
   end
@@ -268,7 +226,7 @@ declare -U fpath
 
     FileUtils.rm_rf File.expand_path('copy', LIB_DIR)
 
-    download_file COPY_URI, 'copy.tgz' do |archive|
+    download_file SRC['copy'], 'copy.tgz' do |archive|
       system 'tar', '--extract', '--gzip', '--file', archive, '--directory', LIB_DIR
     end
   end
@@ -310,14 +268,14 @@ declare -U fpath
 
   desc 'exercism', 'download exercism executable (http://exercism.io)'
   def exercism
-    download_file EXERCISM_URI, 'exercism.tgz' do |archive|
+    download_file SRC['exercism'], 'exercism.tgz' do |archive|
       system 'tar', '--extract', '--gzip', '--file', archive, '--directory', BIN_DIR
     end
   end
 
   desc 'rockbox', 'download and install Rockbox Utility (http://www.rockbox.org/wiki/RockboxUtility)'
   def rockbox
-    download_file ROCKBOX_UTILITY_URI, 'rockbox.tar.bz2' do |archive|
+    download_file SRC['rockbox'], 'rockbox.tar.bz2' do |archive|
       FileUtils.rm_f location_of('RockboxUtility')
       system 'tar', '--extract', '--bzip2', '--file', archive
       place_binary Dir['*/RockboxUtility'].first
@@ -326,7 +284,7 @@ declare -U fpath
 
   desc 'camlistore', 'download and install camlistore (http://camlistore.org)'
   def camlistore
-    in_git_repo CAMLISTORE_REPO_URI do
+    in_git_repo SRC['camlistore'] do
       system 'go', 'run', 'make.go'
 
       Dir['bin/*']
@@ -341,7 +299,7 @@ declare -U fpath
 
     FileUtils.rm_rf File.expand_path('google-cloud-sdk', LIB_DIR)
 
-    download_file GOOGLE_CLOUD_SDK_URI, 'google-cloud-sdk.zip' do |archive|
+    download_file SRC['gcloud'], 'google-cloud-sdk.zip' do |archive|
       system 'unzip', archive, '-d', LIB_DIR
     end
 
@@ -363,7 +321,7 @@ declare -U fpath
 
     FileUtils.rm_rf File.expand_path('heroku-client', LIB_DIR)
 
-    download_file HEROKU_CLIENT_URI, 'heroku-client.tgz' do |archive|
+    download_file SRC['heroku'], 'heroku-client.tgz' do |archive|
       system 'tar', '--extract', '--gzip', '--file', archive, '--directory', LIB_DIR
     end
   end
@@ -379,7 +337,7 @@ declare -U fpath
         system 'git', 'pull'
       end
     else
-      system 'git', 'clone', ZSH_COMPLETIONS_URI, dir
+      system 'git', 'clone', SRC['zsh-completions'], dir
     end
   end
 
@@ -393,7 +351,7 @@ declare -U fpath
 
   desc 'ngrok', 'Install ngrok (http://ngrok.com)'
   def ngrok
-    download_file NGROK_URI, 'ngrok.zip' do |archive|
+    download_file SRC['ngrok'], 'ngrok.zip' do |archive|
       FileUtils.rm_f location_of('ngrok')
       system 'unzip', archive, '-d', BIN_DIR
     end
