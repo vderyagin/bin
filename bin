@@ -114,7 +114,7 @@ module Helpers
 end
 
 class Bin < Thor
-  desc 'init', 'output zsh code for initialization of needed env variables'
+  desc 'init', 'Output zsh code for initialization of needed env variables'
   def init
     print <<-EOS
 path=(
@@ -139,7 +139,7 @@ declare -U fpath
      EOS
   end
 
-  desc 'all', 'do everyting'
+  desc 'all', 'Do everyting'
   def all
     (self.class.instance_methods(false) - %i(init all)).each do |task|
       public_send task
@@ -148,22 +148,22 @@ declare -U fpath
     strip_binaries
   end
 
-  desc 'git_wip', 'download and install git-wip script (https://github.com/bartman/git-wip)'
+  desc 'git_wip', 'Download and install git-wip script (https://github.com/bartman/git-wip)'
   def git_wip
     replace_executable location_of('git-wip'), open(SRC['git-wip']).read
   end
 
-  desc 'hub', 'download and install hub script (http://hub.github.com)'
+  desc 'hub', 'Download and install hub script (http://hub.github.com)'
   def hub
     replace_executable location_of('hub'), open(SRC['hub']).read
   end
 
-  desc 'lein', 'download and install lein (http://leiningen.org)'
+  desc 'lein', 'Download and install lein (http://leiningen.org)'
   def lein
     replace_executable location_of('lein'), open(SRC['lein']).read
   end
 
-  desc 'sbt', 'get jar needed to run sbt (http://www.scala-sbt.org)'
+  desc 'sbt', 'Get jar needed to run sbt (http://www.scala-sbt.org)'
   def sbt
     ensure_directory_exists LIB_DIR
 
@@ -173,7 +173,7 @@ declare -U fpath
     end
   end
 
-  desc 'odeskteam', 'install "oDesk Team" application (https://www.odesk.com/downloads)'
+  desc 'odeskteam', 'Install "oDesk Team" application (https://www.odesk.com/downloads)'
   def odeskteam
     ensure_directory_exists LIB_DIR
 
@@ -184,7 +184,7 @@ declare -U fpath
     end
   end
 
-  desc 'k2pdfopt', 'install k2pdfopt (http://www.willus.com/k2pdfopt/)'
+  desc 'k2pdfopt', 'Install k2pdfopt (http://www.willus.com/k2pdfopt/)'
   def k2pdfopt
     download_file SRC['k2pdfopt'], 'k2pdfopt' do |binary|
       FileUtils.rm_f location_of('k2pdfopt')
@@ -193,7 +193,7 @@ declare -U fpath
     end
   end
 
-  desc 'dart', 'install Dart SDK (http://www.dartlang.org/tools/sdk)'
+  desc 'dart', 'Install Dart SDK (http://www.dartlang.org/tools/sdk)'
   def dart
     ensure_directory_exists LIB_DIR
 
@@ -204,7 +204,7 @@ declare -U fpath
     end
   end
 
-  desc 'copy', 'install Copy{Agent,Console,Cmd} tools (http://copy.com)'
+  desc 'copy', 'Install Copy{Agent,Console,Cmd} tools (http://copy.com)'
   def copy
     ensure_directory_exists LIB_DIR
 
@@ -215,7 +215,7 @@ declare -U fpath
     end
   end
 
-  desc 'emxkb', 'build emxkb from source'
+  desc 'emxkb', 'Build emxkb from source'
   def emxkb
     FileUtils.rm_f location_of('emxkb')
 
@@ -224,7 +224,7 @@ declare -U fpath
     end
   end
 
-  desc 'skb', 'download skb source and build it (https://github.com/polachok/skb)'
+  desc 'skb', 'Download skb source and build it (https://github.com/polachok/skb)'
   def skb
     in_github_repo 'polachok/skb' do
       system 'make', 'skb'
@@ -232,7 +232,7 @@ declare -U fpath
     end
   end
 
-  desc 'dzen2', 'download dzen2 source and build it (https://github.com/robm/dzen)'
+  desc 'dzen2', 'Download dzen2 source and build it (https://github.com/robm/dzen)'
   def dzen2
     in_github_repo 'robm/dzen' do
       system 'make'
@@ -240,24 +240,24 @@ declare -U fpath
     end
   end
 
-  desc 'hsmarkdown', 'make symlink pandoc -> hsmarkdown'
+  desc 'hsmarkdown', 'Make symlink pandoc -> hsmarkdown'
   def hsmarkdown
     symlink_executable 'pandoc', 'hsmarkdown'
   end
 
-  desc 'unrar_free', 'make symlink unrar-gpl -> unrar-free'
+  desc 'unrar_free', 'Make symlink unrar-gpl -> unrar-free'
   def unrar_free
     symlink_executable 'unrar-gpl', 'unrar-free'
   end
 
-  desc 'exercism', 'download exercism executable (http://exercism.io)'
+  desc 'exercism', 'Download exercism executable (http://exercism.io)'
   def exercism
     download_file SRC['exercism'], 'exercism.tgz' do |archive|
       system 'tar', '--extract', '--gzip', '--file', archive, '--directory', BIN_DIR
     end
   end
 
-  desc 'rockbox', 'download and install Rockbox Utility (http://www.rockbox.org/wiki/RockboxUtility)'
+  desc 'rockbox', 'Download and install Rockbox Utility (http://www.rockbox.org/wiki/RockboxUtility)'
   def rockbox
     download_file SRC['rockbox'], 'rockbox.tar.bz2' do |archive|
       FileUtils.rm_f location_of('RockboxUtility')
@@ -266,7 +266,7 @@ declare -U fpath
     end
   end
 
-  desc 'camlistore', 'download and install camlistore (http://camlistore.org)'
+  desc 'camlistore', 'Download and install camlistore (http://camlistore.org)'
   def camlistore
     in_git_repo SRC['camlistore'] do
       system 'go', 'run', 'make.go'
@@ -277,7 +277,7 @@ declare -U fpath
     end
   end
 
-  desc 'gcloud', 'download and install Google Cloud SDK (https://developers.google.com/cloud/sdk)'
+  desc 'gcloud', 'Download and install Google Cloud SDK (https://developers.google.com/cloud/sdk)'
   def gcloud
     ensure_directory_exists LIB_DIR
 
@@ -299,7 +299,7 @@ declare -U fpath
     system(*install_cmd)
   end
 
-  desc 'heroku', 'download and install Heroku client (https://github.com/heroku/heroku)'
+  desc 'heroku', 'Download and install Heroku client (https://github.com/heroku/heroku)'
   def heroku
     ensure_directory_exists LIB_DIR
 
@@ -310,7 +310,7 @@ declare -U fpath
     end
   end
 
-  desc 'zsh_completions', 'clone zsh-completions repository (https://github.com/zsh-users/zsh-completions)'
+  desc 'zsh_completions', 'Clone zsh-completions repository (https://github.com/zsh-users/zsh-completions)'
   def zsh_completions
     ensure_directory_exists LIB_DIR
 
