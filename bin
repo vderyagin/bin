@@ -70,6 +70,8 @@ HUB_URI ='http://hub.github.com/standalone'
 
 LEIN_URI = 'https://raw.github.com/technomancy/leiningen/stable/bin/lein'
 
+NGROK_URI = 'https://api.equinox.io/1/Applications/ap_pJSFC5wQYkAyI0FIVwKYs9h1hW/Updates/Asset/ngrok.zip?os=linux&arch=386&channel=stable'
+
 module Helpers
   def replace_executable(file, content)
     FileUtils.rm_f file
@@ -243,6 +245,7 @@ declare -U fpath
   desc 'k2pdfopt', 'install k2pdfopt (http://www.willus.com/k2pdfopt/)'
   def k2pdfopt
     download_file K2PDFOPT_URI, 'k2pdfopt' do |binary|
+      FileUtils.rm_f location_of('k2pdfopt')
       File.chmod 0744, binary
       FileUtils.cp binary, BIN_DIR
     end
@@ -385,6 +388,14 @@ declare -U fpath
     in_github_repo 'wg/wrk' do
       system 'make'
       place_binary 'wrk'
+    end
+  end
+
+  desc 'ngrok', 'Install ngrok (http://ngrok.com)'
+  def ngrok
+    download_file NGROK_URI, 'ngrok.zip' do |archive|
+      FileUtils.rm_f location_of('ngrok')
+      system 'unzip', archive, '-d', BIN_DIR
     end
   end
 
