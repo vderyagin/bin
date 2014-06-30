@@ -368,7 +368,7 @@ declare -U fpath
     end
   end
 
-  desc 'zsh_completions', 'clone zsh-completions repository'
+  desc 'zsh_completions', 'clone zsh-completions repository (https://github.com/zsh-users/zsh-completions)'
   def zsh_completions
     ensure_directory_exists LIB_DIR
 
@@ -383,7 +383,7 @@ declare -U fpath
     end
   end
 
-  desc 'wrk', 'Install wrk HTTP benchmarking tool'
+  desc 'wrk', 'Install wrk HTTP benchmarking tool (https://github.com/wg/wrk)'
   def wrk
     in_github_repo 'wg/wrk' do
       system 'make'
