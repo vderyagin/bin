@@ -141,26 +141,9 @@ declare -U fpath
 
   desc 'all', 'do everyting'
   def all
-    git_wip
-    hub
-    lein
-    sbt
-    odeskteam
-    k2pdfopt
-    dart
-    copy
-    emxkb
-    skb
-    dzen2
-    hsmarkdown
-    unrar_free
-    exercism
-    rockbox
-    camlistore
-    gcloud
-    heroku
-    zsh_completions
-    wrk
+    (self.class.instance_methods(false) - %i(init all)).each do |task|
+      public_send task
+    end
 
     strip_binaries
   end
