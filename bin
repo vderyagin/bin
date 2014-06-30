@@ -206,17 +206,17 @@ declare -U fpath
     strip_binaries
   end
 
-  desc 'git_wip', 'download and install git-wip script'
+  desc 'git_wip', 'download and install git-wip script (https://github.com/bartman/git-wip)'
   def git_wip
     replace_executable location_of('git-wip'), open(GIT_WIP_URI).read
   end
 
-  desc 'hub', 'download and install hub script'
+  desc 'hub', 'download and install hub script (http://hub.github.com)'
   def hub
     replace_executable location_of('hub'), open(HUB_URI).read
   end
 
-  desc 'git_wip', 'download and install lein'
+  desc 'lein', 'download and install lein (http://leiningen.org)'
   def lein
     replace_executable location_of('lein'), open(LEIN_URI).read
   end
