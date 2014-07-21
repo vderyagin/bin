@@ -341,6 +341,14 @@ declare -U fpath
     end
   end
 
+  desc 'cv', 'Build and install cv - coreutils viewer  (https://github.com/Xfennec/cv)'
+  def cv
+    in_github_repo 'Xfennec/cv' do
+      system 'make'
+      place_binary 'cv'
+    end
+  end
+
   no_commands do
     include Helpers
   end
