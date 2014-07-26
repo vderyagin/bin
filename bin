@@ -359,6 +359,7 @@ declare -U fpath
 
     git_clone_or_pull SRC['xiki'], File.expand_path('xiki', LIB_DIR) do
       FileUtils.rm_f location_of('xiki')
+      system 'bundle'
       system 'ruby', 'etc/command/copy_xiki_command_to.rb', location_of('xiki')
     end
   end
