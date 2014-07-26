@@ -364,7 +364,7 @@ declare -U fpath
     end
 
     Dir.chdir dest_dir do
-      system, 'ruby', 'etc/command/copy_xiki_command_to.rb', location_of('xiki')
+      system 'ruby', 'etc/command/copy_xiki_command_to.rb', location_of('xiki')
     end
   end
 
