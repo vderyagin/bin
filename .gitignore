@@ -4,6 +4,7 @@
 /cammount
 /camput
 /camtool
+/cv
 /devcam
 /dzen2
 /emxkb
@@ -15,5 +16,9 @@
 /k2pdfopt
 /lein
 /lib
+/ngrok
+/publisher
 /skb
 /unrar-free
+/wrk
+/xiki
