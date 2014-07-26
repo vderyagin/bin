@@ -354,7 +354,7 @@ declare -U fpath
     dest_dir = File.expand_path('xiki', LIB_DIR)
     system 'git', 'clone', SRC['xiki'], dest_dir
 
-    Dir.cd dest_dir do
+    Dir.chdir dest_dir do
       ruby 'etc/command/copy_xiki_command_to.rb', location_of('xiki')
     end
   end
