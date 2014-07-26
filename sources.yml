@@ -13,3 +13,4 @@ git-wip:         https://raw.githubusercontent.com/bartman/git-wip/master/git-wi
 hub:             http://hub.github.com/standalone
 lein:            https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
 ngrok:           https://api.equinox.io/1/Applications/ap_pJSFC5wQYkAyI0FIVwKYs9h1hW/Updates/Asset/ngrok.zip?os=linux&arch=386&channel=stable
+xiki:            git://github.com/trogdoro/xiki.git
