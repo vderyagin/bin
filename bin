@@ -351,8 +351,17 @@ declare -U fpath
 
   desc 'xiki', 'Install xiki (http://xiki.org)'
   def xiki
+    ensure_directory_exists LIB_DIR
+
     dest_dir = File.expand_path('xiki', LIB_DIR)
-    system 'git', 'clone', SRC['xiki'], dest_dir
+
+    if File.directory?(dest_dir)
+      Dir.chdir dest_dir do
+        system 'git', 'pull'
+      end
+    else
+      system 'git', 'clone', SRC['xiki'], dest_dir
+    end
 
     Dir.chdir dest_dir do
       ruby 'etc/command/copy_xiki_command_to.rb', location_of('xiki')
