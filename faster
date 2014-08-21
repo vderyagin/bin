@@ -111,6 +111,7 @@ PARSER = OptionParser.new do |opts|
           'Directory to put converted files in, default is "."') do |dir|
     OPTIONS[:dir] = Pathname.new(File.expand_path(dir)).tap do |d|
       abort "ERROR: '#{d}' is not a valid directory" unless d.directory?
+      abort "ERROR: can not write to '#{d}'" unless d.writable?
     end
   end
 
