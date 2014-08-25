@@ -42,6 +42,7 @@ module Helpers
     binary = location_of(name)
     FileUtils.rm_f binary
     FileUtils.cp name, binary
+    File.chmod 0744, binary
   end
 
   def executable?(file)
@@ -199,9 +200,7 @@ declare -U fpath
   desc 'k2pdfopt', 'Install k2pdfopt (http://www.willus.com/k2pdfopt/)'
   def k2pdfopt
     download_file SRC['k2pdfopt'], 'k2pdfopt' do |binary|
-      FileUtils.rm_f location_of('k2pdfopt')
-      File.chmod 0744, binary
-      FileUtils.cp binary, BIN_DIR
+      place_binary binary
     end
   end
 
