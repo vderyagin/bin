@@ -364,6 +364,13 @@ declare -U fpath
     end
   end
 
+  desc 'fig', 'Install fig (http://fig.sh)'
+  def fig
+    download_file SRC['fig'], 'fig' do |binary|
+      place_binary binary
+    end
+  end
+
   no_commands do
     include Helpers
   end
