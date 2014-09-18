@@ -370,6 +370,13 @@ declare -U fpath
     end
   end
 
+  desc 'jq', 'Install jq (http://stedolan.github.io/jq)'
+  def jq
+    download_file SRC['jq'], 'jq' do |binary|
+      place_binary binary
+    end
+  end
+
   no_commands do
     include Helpers
   end
