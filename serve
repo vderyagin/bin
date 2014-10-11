@@ -43,5 +43,5 @@ trap :INT do
   server.shutdown
 end
 
-puts "Serving #{options[:DocumentRoot]} on 0.0.0.0:#{options[:Port]}"
+puts "Serving #{options[:DocumentRoot]} on http://0.0.0.0:#{options[:Port]}"
 server.start
