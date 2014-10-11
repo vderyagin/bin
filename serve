@@ -17,7 +17,7 @@ options = {
   DocumentRoot: Dir.pwd
 }
 
-OptionParser.new do |opts|
+OptionParser.new { |opts|
   executable_name = File.basename($PROGRAM_NAME)
 
   opts.banner = "Usage: #{executable_name} [OPTIONS] [DIR]"
@@ -33,15 +33,16 @@ OptionParser.new do |opts|
   opts.on '-p', '--port PORT', Integer, 'Port to serve on' do |port|
     options[:Port] = port
   end
-end.parse! ARGV
+}.parse! ARGV
 
 options[:DocumentRoot] = ARGV.first unless ARGV.empty?
 
 server = WEBrick::HTTPServer.new(options)
 
 trap :INT do
+  warn 'Exiting...'
   server.shutdown
 end
 
-puts "Serving #{options[:DocumentRoot]} on http://0.0.0.0:#{options[:Port]}"
+warn "Serving #{options[:DocumentRoot]} on http://0.0.0.0:#{options[:Port]}"
 server.start
