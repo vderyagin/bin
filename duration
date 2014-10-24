@@ -39,13 +39,7 @@ class Duration
     @state = Hash.new(0)
   end
 
-  [
-    :seconds,
-    :minutes,
-    :hours,
-    :days,
-    :weeks,
-  ].each do |span|
+  %i(seconds minutes hours days weeks).each do |span|
     define_method span do
       @state[span]
     end
@@ -93,13 +87,7 @@ class Duration
   protected :'=='
 
   def zero?
-    [
-      :seconds,
-      :minutes,
-      :hours,
-      :days,
-      :weeks,
-    ].all? { |span| @state[span].zero? }
+    %i(seconds minutes hours days weeks).all? { |span| @state[span].zero? }
   end
 
   def to_s
@@ -151,7 +139,7 @@ class Duration
 end
 
 def duration(media_file)
-  ffmpeg_io = IO.popen(['ffmpeg', '-i', media_file, err: [:child, :out]])
+  ffmpeg_io = IO.popen(['ffmpeg', '-i', media_file, err: %i(child out)])
   /^\s*Duration: (?<h>\d+):(?<m>\d+):(?<s>[\d\.]+), / =~ ffmpeg_io.read
 
   Duration.new
