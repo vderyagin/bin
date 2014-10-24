@@ -154,7 +154,18 @@ if __FILE__ == $PROGRAM_NAME
 
   total = Duration.new
 
-  ARGV.each do |f|
+  files = ARGV.each_with_object([]) do |arg, ary|
+    if File.file?(arg)
+      obj << arg
+    elsif File.directory?(arg)
+      inner_files = Dir.glob(File.join(arg, '**/*')).reject(&File.method(:directory?))
+      ary.concat(inner_files)
+    else
+      abort "'#{arg}' in neither file nor directory"
+    end
+  end
+
+  files.each do |f|
     current = duration(f)
 
     next if current.zero?
