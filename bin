@@ -377,6 +377,25 @@ declare -U fpath
     end
   end
 
+  desc 'chrome_launcher', 'install host for chrome_launcher chrome extension'
+  def chrome_launcher
+    FileUtils.rm_f location_of('chrome_launcher')
+
+    Dir.chdir File.expand_path('src/chrome_launcher', BIN_DIR) do
+      system 'go', 'build'
+      place_binary 'chrome_launcher'
+    end
+
+    host_manifest = File.expand_path('src/chrome_launcher/chrome_launcher.json', BIN_DIR)
+
+    %w(chromium google-chrome google-chrome-unstable).map { |chrome_conf_dir|
+      File.expand_path("#{chrome_conf_dir}/NativeMessagingHosts", '~/.config/')
+    }.each do |msg_hosts_dir|
+      FileUtils.mkdir_p msg_hosts_dir
+      FileUtils.ln_sf host_manifest, msg_hosts_dir
+    end
+  end
+
   no_commands do
     include Helpers
   end

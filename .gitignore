@@ -24,3 +24,7 @@
 /unrar-free
 /wrk
 /xiki
+/src/chrome_launcher/*
+!/src/chrome_launcher/*.go
+!/src/chrome_launcher/*.json
+/chrome_launcher

@@ -1,0 +1,9 @@
+{
+  "name": "chrome_launcher",
+  "description": "A proxy to launch other application from chrome",
+  "path": "/home/vderyagin/.bin/chrome_launcher",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://iebiaccjhefomnbjnkbeabbfccaimppo/"
+  ]
+}
