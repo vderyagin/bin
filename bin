@@ -110,7 +110,7 @@ module Helpers
   end
 
   def ensure_directory_exists(dir)
-    Dir.mkdir dir unless File.directory?(dir)
+    FileUtils.mkpath dir unless File.directory?(dir)
   end
 
   def git_clone_or_pull(repo, dir, &block)
@@ -358,6 +358,19 @@ declare -U fpath
     }.each do |msg_hosts_dir|
       FileUtils.mkdir_p msg_hosts_dir
       FileUtils.ln_sf host_manifest, msg_hosts_dir
+    end
+  end
+
+  desc 'ledger', 'install ledger accounting applicatoin (http://ledger-cli.org)'
+  def ledger
+    prefix = File.expand_path('ledger', LIB_DIR)
+    FileUtils.rm_rf prefix
+    ensure_directory_exists prefix
+
+    in_github_repo 'ledger/ledger' do
+      system './acprep', 'update', "--prefix=#{prefix}", '--jobs=3'
+      system 'make', 'check' or fail
+      system 'make', 'install'
     end
   end
 
