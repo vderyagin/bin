@@ -136,8 +136,14 @@ path=(
   "#{BIN_DIR}/lib/dart-sdk/bin"
   "#{BIN_DIR}/lib/google-cloud-sdk/bin"
   "#{BIN_DIR}/lib/heroku-client/bin"
+  "#{BIN_DIR}/lib/ledger/bin"
   "#{BIN_DIR}/lib/odeskteam-3.2.13-1-x86_64/usr/bin"
   $path
+)
+
+manpath=(
+  "#{BIN_DIR}/lib/ledger/share/man"
+  $manpath
 )
 
 fpath=(
