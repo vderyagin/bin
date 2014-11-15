@@ -166,11 +166,6 @@ declare -U fpath
     replace_executable location_of('git-wip'), open(SRC['git-wip']).read
   end
 
-  desc 'hub', 'Download and install hub script (http://hub.github.com)'
-  def hub
-    replace_executable location_of('hub'), open(SRC['hub']).read
-  end
-
   desc 'lein', 'Download and install lein (http://leiningen.org)'
   def lein
     replace_executable location_of('lein'), open(SRC['lein']).read
@@ -328,27 +323,11 @@ declare -U fpath
     git_clone_or_pull SRC['zsh-completions'], dir
   end
 
-  desc 'wrk', 'Install wrk HTTP benchmarking tool (https://github.com/wg/wrk)'
-  def wrk
-    in_github_repo 'wg/wrk' do
-      system 'make'
-      place_binary 'wrk'
-    end
-  end
-
   desc 'ngrok', 'Install ngrok (http://ngrok.com)'
   def ngrok
     download_file SRC['ngrok'], 'ngrok.zip' do |archive|
       FileUtils.rm_f location_of('ngrok')
       system 'unzip', archive, '-d', BIN_DIR
-    end
-  end
-
-  desc 'cv', 'Build and install cv - coreutils viewer  (https://github.com/Xfennec/cv)'
-  def cv
-    in_github_repo 'Xfennec/cv' do
-      system 'make'
-      place_binary 'cv'
     end
   end
 
@@ -360,20 +339,6 @@ declare -U fpath
       FileUtils.rm_f location_of('xiki')
       system 'bundle'
       system 'ruby', 'etc/command/copy_xiki_command_to.rb', location_of('xiki')
-    end
-  end
-
-  desc 'fig', 'Install fig (http://fig.sh)'
-  def fig
-    download_file SRC['fig'], 'fig' do |binary|
-      place_binary binary
-    end
-  end
-
-  desc 'jq', 'Install jq (http://stedolan.github.io/jq)'
-  def jq
-    download_file SRC['jq'], 'jq' do |binary|
-      place_binary binary
     end
   end
 

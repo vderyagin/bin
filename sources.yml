@@ -2,12 +2,9 @@ camlistore:      https://camlistore.googlesource.com/camlistore
 copy:            https://copy.com/install/linux/Copy.tgz
 dart:            https://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-linux-x64-release.zip
 exercism:        https://github.com/exercism/cli/releases/download/v1.8.2/exercism-linux-64bit.tgz
-fig:             https://github.com/docker/fig/releases/download/1.0.1/fig-Linux-x86_64
 gcloud:          https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.zip
 git-wip:         https://raw.githubusercontent.com/bartman/git-wip/master/git-wip
 heroku:          http://assets.heroku.com/heroku-client/heroku-client.tgz
-hub:             http://hub.github.com/standalone
-jq:              http://stedolan.github.io/jq/download/linux64/jq
 k2pdfopt:        https://docs.google.com/uc?export=download&id=0B1NdDtEdfiQpbTZmQW1hU1NrR3c
 lein:            https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
 ngrok:           https://api.equinox.io/1/Applications/ap_pJSFC5wQYkAyI0FIVwKYs9h1hW/Updates/Asset/ngrok.zip?os=linux&arch=386&channel=stable
