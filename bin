@@ -13,6 +13,7 @@ require 'yaml'
 
 Shells out to:
 
+  bzip2(1)
   file(1)
   gcc(1)
   git(1)
@@ -144,6 +145,11 @@ path=(
 manpath=(
   "#{BIN_DIR}/lib/ledger/share/man"
   $manpath
+)
+
+infopath=(
+  "#{BIN_DIR}/lib/ledger/share/info"
+  $infopath
 )
 
 fpath=(
@@ -370,6 +376,8 @@ declare -U fpath
   desc 'ledger', 'install ledger accounting applicatoin (http://ledger-cli.org)'
   def ledger
     prefix = File.expand_path('ledger', LIB_DIR)
+    info_dir = File.expand_path('share/info', prefix)
+
     FileUtils.rm_rf prefix
     ensure_directory_exists prefix
 
@@ -377,6 +385,21 @@ declare -U fpath
       system './acprep', 'update', "--prefix=#{prefix}", '--jobs=3'
       system 'make', 'check' or fail
       system 'make', 'install'
+
+      system 'makeinfo', *Dir['doc/*.texi']
+
+      Dir.glob('*.info*') do |info|
+        system 'bzip2', '--compress', info
+      end
+
+      ensure_directory_exists info_dir
+      FileUtils.mv Dir['*.bz2'], info_dir
+
+      Dir.chdir info_dir do
+        Dir.glob('*.info*') do |info|
+          system 'install-info', info, 'dir'
+        end
+      end
     end
   end
 
