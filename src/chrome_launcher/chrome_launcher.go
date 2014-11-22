@@ -21,7 +21,7 @@ type Message struct {
 
 func main() {
 	for msg := range MessagesFrom(os.Stdin) {
-		command := fmt.Sprintf("nohup mpv %s >/dev/null 2>&1", msg.URL)
+		command := fmt.Sprintf("nohup mpv --ytdl %s >/dev/null 2>&1", msg.URL)
 		go exec.Command("sh", "-c", command).Run()
 	}
 }
