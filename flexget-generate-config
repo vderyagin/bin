@@ -39,7 +39,7 @@ def tasks
   input.each_with_object({}) do |(category, list), task|
     list.each do |name, url|
       task[name] = {
-        'template' => category.chomp('s'),
+        'template' => category.sub(/(s|_channels|_playlists)\z/, ''),
         'rss' => url_for(category, url)
       }
     end
@@ -50,8 +50,10 @@ def url_for(category, string)
   case
   when string[/\Ahttp/]
     string
-  when category == 'youtube'
+  when category == 'youtube_channels'
     "http://gdata.youtube.com/feeds/base/users/#{string}/uploads"
+  when category == 'youtube_playlists'
+    "http://gdata.youtube.com/feeds/api/playlists/#{string}"
   else
     fail "dunno what to do with this thing: '#{string}'"
   end
