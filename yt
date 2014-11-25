@@ -69,6 +69,20 @@ def youtube_single_video?(url)
   youtube?(url) && url =~ /\/watch\?v=.+/
 end
 
+def youtube_channel?(url)
+  url[/\Wyoutu(\.be|be\.com)\/((user|channel)\/)?[[:alpha:]\-_]+/]
+end
+
+# If url refers to youtube channel or playlist, return list of all videos on
+# that channel or playlist.
+def expand(url)
+  if youtube_channel?(url) || youtube_playlist(url)
+    `youtube-dl --simulate #{url}`.scan(/(?<=^\[youtube\] )[^:\s]+(?=: Downloading)/).uniq
+  else
+    url
+  end
+end
+
 # if both video and playlist are specified, youtube-dl(1) tries to download
 # whole playlist from the beginning, this is the fix:
 def clean(url)
@@ -157,13 +171,15 @@ if __FILE__ == $PROGRAM_NAME
     exit 1
   end
 
+  args = ARGV.map(&method(:expand)).flatten
+
   cmd = [
     'youtube-dl',
     '--output',
     destination(options[:out_dir]),
   ]
 
-  if ARGV.size > 1
+  if args.size > 1
     cmd = [
       'moreutils_parallel',
       '-j',
@@ -175,7 +191,7 @@ if __FILE__ == $PROGRAM_NAME
   end
 
   begin
-    system(*cmd, *ARGV.map(&method(:clean))).tap do |result|
+    system(*cmd, *args).tap do |result|
       abort "command execution failed: #{cmd.inspect}" if result.nil?
       abort 'non-zero exit status' unless result
     end
