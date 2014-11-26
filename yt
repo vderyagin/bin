@@ -70,13 +70,14 @@ def youtube_single_video?(url)
 end
 
 def youtube_channel?(url)
-  url[/\Wyoutu(\.be|be\.com)\/((user|channel)\/)?[[:alpha:]\-_]+/]
+  url[/\Wyoutu(\.be|be\.com)\/((user|channel)\/)?[[:alpha:]\-_]+\z/]
 end
 
 # If url refers to youtube channel or playlist, return list of all videos on
 # that channel or playlist.
 def expand(url)
-  if youtube_channel?(url) || youtube_playlist(url)
+  if youtube_channel?(url) || youtube_playlist?(url)
+    warn "getting list of videos for #{url}"
     `youtube-dl --simulate #{url}`.scan(/(?<=^\[youtube\] )[^:\s]+(?=: Downloading)/).uniq
   else
     url
