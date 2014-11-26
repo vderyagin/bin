@@ -135,6 +135,7 @@ path=(
   "#{BIN_DIR}"
   "#{BIN_DIR}/lib/copy/x86_64"
   "#{BIN_DIR}/lib/dart-sdk/bin"
+  "#{BIN_DIR}/lib/git-extras/bin"
   "#{BIN_DIR}/lib/google-cloud-sdk/bin"
   "#{BIN_DIR}/lib/heroku-client/bin"
   "#{BIN_DIR}/lib/ledger/bin"
@@ -143,6 +144,7 @@ path=(
 )
 
 manpath=(
+  "#{BIN_DIR}/lib/git-extras/share/man"
   "#{BIN_DIR}/lib/ledger/share/man"
   $manpath
 )
@@ -400,6 +402,22 @@ declare -U fpath
           system 'install-info', info, 'dir'
         end
       end
+    end
+  end
+
+  desc 'git_extras', 'install git-extras git utilities (https://github.com/tj/git-extras)'
+  def git_extras
+    prefix = File.expand_path('git-extras', LIB_DIR)
+    FileUtils.rm_rf prefix
+    ensure_directory_exists prefix
+
+    in_github_repo 'tj/git-extras' do
+      env = {
+        'BINPREFIX' => '/bin',
+        'MANPREFIX' => '/share/man/man1',
+        'DESTDIR'   => prefix,
+      }
+      IO.popen(env, %w(make install)).read
     end
   end
 
