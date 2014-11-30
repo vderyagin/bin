@@ -151,6 +151,7 @@ manpath=(
 
 infopath=(
   "#{BIN_DIR}/lib/ledger/share/info"
+  "#{LIB_DIR}/sicp-info"
   $infopath
 )
 
@@ -418,6 +419,13 @@ declare -U fpath
         'DESTDIR'   => prefix,
       }
       IO.popen(env, %w(make install)).read
+    end
+  end
+
+  desc 'sicp', 'download SICP book (http://mitpress.mit.edu/sicp) in Texinfo format'
+  def sicp
+    Dir.chdir LIB_DIR do
+      system 'git', 'clone', SRC['sicp']
     end
   end
 
