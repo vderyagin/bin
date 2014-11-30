@@ -133,37 +133,39 @@ class Bin < Thor
     print <<-EOS
 path=(
   "#{BIN_DIR}"
-  "#{BIN_DIR}/lib/copy/x86_64"
-  "#{BIN_DIR}/lib/dart-sdk/bin"
-  "#{BIN_DIR}/lib/git-extras/bin"
-  "#{BIN_DIR}/lib/google-cloud-sdk/bin"
-  "#{BIN_DIR}/lib/heroku-client/bin"
-  "#{BIN_DIR}/lib/ledger/bin"
-  "#{BIN_DIR}/lib/odeskteam-3.2.13-1-x86_64/usr/bin"
+  "#{LIB_DIR}/copy/x86_64"
+  "#{LIB_DIR}/dart-sdk/bin"
+  "#{LIB_DIR}/git-extras/bin"
+  "#{LIB_DIR}/google-cloud-sdk/bin"
+  "#{LIB_DIR}/heroku-client/bin"
+  "#{LIB_DIR}/ledger/bin"
+  "#{LIB_DIR}/odeskteam-3.2.13-1-x86_64/usr/bin"
   $path
 )
 
 manpath=(
-  "#{BIN_DIR}/lib/git-extras/share/man"
-  "#{BIN_DIR}/lib/ledger/share/man"
+  "#{LIB_DIR}/git-extras/share/man"
+  "#{LIB_DIR}/ledger/share/man"
   $manpath
 )
 
 infopath=(
-  "#{BIN_DIR}/lib/ledger/share/info"
   "#{LIB_DIR}/sicp-info"
+  "#{LIB_DIR}/ledger/share/info"
   $infopath
 )
 
 fpath=(
-  "#{BIN_DIR}/lib/zsh-completions/src"
+  "#{LIB_DIR}/zsh-completions/src"
   $fpath
 )
 
-source "#{BIN_DIR}/lib/google-cloud-sdk/completion.zsh.inc"
+source "#{LIB_DIR}/google-cloud-sdk/completion.zsh.inc"
 
-declare -U path
 declare -U fpath
+declare -U infopath
+declare -U manpath
+declare -U path
      EOS
   end
 
