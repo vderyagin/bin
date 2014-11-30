@@ -426,9 +426,9 @@ declare -U path
 
   desc 'sicp', 'download SICP book (http://mitpress.mit.edu/sicp) in Texinfo format'
   def sicp
-    Dir.chdir LIB_DIR do
-      system 'git', 'clone', SRC['sicp']
-    end
+    ensure_directory_exists LIB_DIR
+    dir = File.expand_path('sicp-info', LIB_DIR)
+    git_clone_or_pull SRC['sicp'], dir
   end
 
   no_commands do
