@@ -136,6 +136,7 @@ path=(
   "#{LIB_DIR}/copy/x86_64"
   "#{LIB_DIR}/dart-sdk/bin"
   "#{LIB_DIR}/git-extras/bin"
+  "#{LIB_DIR}/git-sync"
   "#{LIB_DIR}/google-cloud-sdk/bin"
   "#{LIB_DIR}/heroku-client/bin"
   "#{LIB_DIR}/ledger/bin"
@@ -429,6 +430,13 @@ declare -U path
     ensure_directory_exists LIB_DIR
     dir = File.expand_path('sicp-info', LIB_DIR)
     git_clone_or_pull SRC['sicp'], dir
+  end
+
+  desc 'git_sync', 'install git-sync (https://github.com/simonthum/git-sync)'
+  def git_sync
+    ensure_directory_exists LIB_DIR
+    dir = File.expand_path('git-sync', LIB_DIR)
+    git_clone_or_pull SRC['git-sync'], dir
   end
 
   no_commands do
