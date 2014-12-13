@@ -293,7 +293,7 @@ declare -U path
 
   desc 'camlistore', 'Download and install camlistore (http://camlistore.org)'
   def camlistore
-    in_git_repo SRC['camlistore'] do
+    in_github_repo 'camlistore/camlistore' do
       system 'go', 'run', 'make.go'
 
       Dir['bin/*']

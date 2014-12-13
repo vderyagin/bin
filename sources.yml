@@ -1,4 +1,3 @@
-camlistore:      https://camlistore.googlesource.com/camlistore
 copy:            https://copy.com/install/linux/Copy.tgz
 dart:            https://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-linux-x64-release.zip
 exercism:        https://github.com/exercism/cli/releases/download/v1.8.2/exercism-linux-64bit.tgz
