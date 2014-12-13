@@ -137,6 +137,7 @@ path=(
   "#{LIB_DIR}/dart-sdk/bin"
   "#{LIB_DIR}/git-extras/bin"
   "#{LIB_DIR}/git-sync"
+  "#{LIB_DIR}/git-wip"
   "#{LIB_DIR}/google-cloud-sdk/bin"
   "#{LIB_DIR}/heroku-client/bin"
   "#{LIB_DIR}/ledger/bin"
@@ -182,7 +183,9 @@ declare -U path
 
   desc 'git_wip', 'Download and install git-wip script (https://github.com/bartman/git-wip)'
   def git_wip
-    replace_executable location_of('git-wip'), open(SRC['git-wip']).read
+    ensure_directory_exists LIB_DIR
+    dir = File.expand_path('git-wip', LIB_DIR)
+    git_clone_or_pull SRC['git-wip'], dir
   end
 
   desc 'lein', 'Download and install lein (http://leiningen.org)'

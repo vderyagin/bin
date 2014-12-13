@@ -3,7 +3,7 @@ dart:            https://storage.googleapis.com/dart-archive/channels/stable/rel
 exercism:        https://github.com/exercism/cli/releases/download/v1.8.2/exercism-linux-64bit.tgz
 gcloud:          https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.zip
 git-sync:        https://github.com/simonthum/git-sync.git
-git-wip:         https://raw.githubusercontent.com/bartman/git-wip/master/git-wip
+git-wip:         https://github.com/bartman/git-wip.git
 heroku:          http://assets.heroku.com/heroku-client/heroku-client.tgz
 k2pdfopt:        https://docs.google.com/uc?export=download&id=0B1NdDtEdfiQpbTZmQW1hU1NrR3c
 lein:            https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
