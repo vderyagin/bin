@@ -18,10 +18,10 @@ require 'optparse'
 require 'pathname'
 
 OPTIONS = {
-  speed: 2.0,
-  dir: Pathname.new(Dir.pwd),
+  speed:         2.0,
+  dir:           Pathname.new(Dir.pwd),
   keep_original: false,
-  fat32: true,
+  fat32:         true,
 }
 
 class AudioFile
@@ -58,10 +58,7 @@ class Command
   def initialize(args)
     @files = args.map(&AudioFile.method(:new)).select(&:exist?)
 
-    if @files.empty?
-      warn 'No files to process, exiting'
-      exit 1
-    end
+    abort 'No files to process, exiting' if @files.empty?
   end
 
   def command

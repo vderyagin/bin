@@ -84,16 +84,6 @@ def expand(url)
   end
 end
 
-# if both video and playlist are specified, youtube-dl(1) tries to download
-# whole playlist from the beginning, this is the fix:
-def clean(url)
-  url.dup.tap do |u|
-    if youtube_single_video?(u) && youtube_playlist?(u)
-      u[/&list=[a-z0-9_]+/i] = ''
-    end
-  end
-end
-
 def run_tests
   require 'minitest/autorun'
 
@@ -140,23 +130,6 @@ def run_tests
     it 'rejects other stuff' do
       url = 'http://www.youtube.com/playlist?list=lst'
       wont_be :youtube_single_video?, url
-    end
-  end
-
-  describe 'clean' do
-    it 'cleans up playlist is specified in single-video url' do
-      url = 'http://www.youtube.com/watch?v=SomeVid&list=UU1_jYjQ&index=2'
-      clean(url).must_equal 'http://www.youtube.com/watch?v=SomeVid&index=2'
-    end
-
-    it 'does not mess with playlist-only urls' do
-      url = 'http://www.youtube.com/playlist?list=UU1yBKRZjYjQ'
-      clean(url).must_equal url
-    end
-
-    it 'does not mess with single-video urls' do
-      url = 'http://www.youtube.com/watch?v=dQw4w9WgXcQ'
-      clean(url).must_equal url
     end
   end
 
