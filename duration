@@ -156,7 +156,7 @@ if __FILE__ == $PROGRAM_NAME
 
   files = ARGV.each_with_object([]) do |arg, ary|
     if File.file?(arg)
-      obj << arg
+      ary << arg
     elsif File.directory?(arg)
       inner_files = Dir.glob(File.join(arg, '**/*')).reject(&File.method(:directory?))
       ary.concat(inner_files)
