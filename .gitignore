@@ -1,4 +1,7 @@
+!/src/chrome_launcher/*.go
+!/src/chrome_launcher/*.json
 /RockboxUtility
+/camdeploy
 /camget
 /camlistored
 /cammount
@@ -19,7 +22,5 @@
 /publisher
 /skb
 /src/chrome_launcher/*
-!/src/chrome_launcher/*.go
-!/src/chrome_launcher/*.json
 /unrar-free
 /xiki

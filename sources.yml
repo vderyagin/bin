@@ -5,6 +5,7 @@ gcloud:          https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.zip
 git-sync:        https://github.com/simonthum/git-sync.git
 git-wip:         https://github.com/bartman/git-wip.git
 heroku:          http://assets.heroku.com/heroku-client/heroku-client.tgz
+hub:             https://github.com/github/hub/releases/download/v2.2.0-rc1/hub_2.2.0-rc1_linux_amd64.gz.tar
 k2pdfopt:        https://docs.google.com/uc?export=download&id=0B1NdDtEdfiQpajBwUVAzSkhoWjA
 lein:            https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
 ngrok:           https://api.equinox.io/1/Applications/ap_pJSFC5wQYkAyI0FIVwKYs9h1hW/Updates/Asset/ngrok.zip?os=linux&arch=386&channel=stable

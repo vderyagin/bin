@@ -140,6 +140,7 @@ path=(
   "#{LIB_DIR}/git-wip"
   "#{LIB_DIR}/google-cloud-sdk/bin"
   "#{LIB_DIR}/heroku-client/bin"
+  "#{LIB_DIR}/hub"
   "#{LIB_DIR}/ledger/bin"
   "#{LIB_DIR}/odeskteam-3.2.13-1-x86_64/usr/bin"
   "#{LIB_DIR}/wmutils/usr/bin"
@@ -164,6 +165,7 @@ fpath=(
 )
 
 source "#{LIB_DIR}/google-cloud-sdk/completion.zsh.inc"
+source "#{LIB_DIR}/hub/hub.zsh_completion"
 
 declare -U fpath
 declare -U infopath
@@ -452,6 +454,18 @@ declare -U path
     in_github_repo 'wmutils/core' do
       system 'make', 'all'
       IO.popen({'DESTDIR' => destdir}, %(make install)).read
+    end
+  end
+
+  desc 'hub', 'install hub (https://hub.github.com)'
+  def hub
+    hub_dir = File.expand_path('hub', LIB_DIR)
+    FileUtils.rm_rf hub_dir
+    ensure_directory_exists hub_dir
+
+    download_file SRC['hub'], 'hub.tgz' do |archive|
+      system 'tar', '--extract', '--gzip', '--file', archive
+      FileUtils.cp Dir['*/hub', '*/etc/hub.zsh_completion'], hub_dir
     end
   end
 
