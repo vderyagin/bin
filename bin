@@ -144,6 +144,7 @@ path=(
   "#{LIB_DIR}/ledger/bin"
   "#{LIB_DIR}/odeskteam-3.2.13-1-x86_64/usr/bin"
   "#{LIB_DIR}/wmutils/usr/bin"
+  "#{LIB_DIR}/xiki/bin"
   $path
 )
 
@@ -360,9 +361,7 @@ declare -U path
     ensure_directory_exists LIB_DIR
 
     git_clone_or_pull SRC['xiki'], File.expand_path('xiki', LIB_DIR) do
-      FileUtils.rm_f location_of('xiki')
       system 'bundle'
-      system 'ruby', 'etc/command/copy_xiki_command_to.rb', location_of('xiki')
     end
   end
 
