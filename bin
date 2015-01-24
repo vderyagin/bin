@@ -166,7 +166,7 @@ fpath=(
 )
 
 source "#{LIB_DIR}/google-cloud-sdk/completion.zsh.inc"
-source "#{LIB_DIR}/hub/hub.zsh_completion"
+# source "#{LIB_DIR}/hub/hub.zsh_completion"
 
 declare -U fpath
 declare -U infopath
