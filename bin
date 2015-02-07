@@ -456,18 +456,6 @@ declare -U path
     end
   end
 
-  desc 'hub', 'install hub (https://hub.github.com)'
-  def hub
-    hub_dir = File.expand_path('hub', LIB_DIR)
-    FileUtils.rm_rf hub_dir
-    ensure_directory_exists hub_dir
-
-    download_file SRC['hub'], 'hub.tgz' do |archive|
-      system 'tar', '--extract', '--gzip', '--file', archive
-      FileUtils.cp Dir['*/hub', '*/etc/hub.zsh_completion'], hub_dir
-    end
-  end
-
   no_commands do
     include Helpers
   end
