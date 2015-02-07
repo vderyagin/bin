@@ -142,7 +142,6 @@ path=(
   "#{LIB_DIR}/git-wip"
   "#{LIB_DIR}/google-cloud-sdk/bin"
   "#{LIB_DIR}/heroku-client/bin"
-  "#{LIB_DIR}/hub"
   "#{LIB_DIR}/ledger/bin"
   "#{LIB_DIR}/odeskteam-3.2.13-1-x86_64/usr/bin"
   "#{LIB_DIR}/wmutils/usr/bin"
