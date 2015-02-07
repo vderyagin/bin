@@ -13,12 +13,14 @@ require 'yaml'
 
 Shells out to:
 
+  bundle(1)
   bzip2(1)
   file(1)
   gcc(1)
   git(1)
   go(1)
   make(1)
+  makeinfo(1)
   strip(1)
   tar(1)
   unzip(1)
