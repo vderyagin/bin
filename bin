@@ -144,6 +144,7 @@ path=(
   "#{LIB_DIR}/heroku-client/bin"
   "#{LIB_DIR}/ledger/bin"
   "#{LIB_DIR}/odeskteam-3.2.13-1-x86_64/usr/bin"
+  "#{LIB_DIR}/watchman/bin"
   "#{LIB_DIR}/wmutils/usr/bin"
   "#{LIB_DIR}/xiki/bin"
   $path
@@ -454,6 +455,20 @@ declare -U path
     in_github_repo 'wmutils/core' do
       system 'make', 'all'
       IO.popen({'DESTDIR' => destdir}, %(make install)).read
+    end
+  end
+
+  desc 'watchman', 'install watchman (https://facebook.github.io/watchman)'
+  def watchman
+    destdir = File.expand_path('watchman', LIB_DIR)
+    FileUtils.rm_rf destdir
+    ensure_directory_exists destdir
+
+    in_github_repo 'facebook/watchman' do
+      system './autogen.sh'
+      system './configure', '--prefix', destdir
+      system 'make'
+      system 'make', 'install'
     end
   end
 
