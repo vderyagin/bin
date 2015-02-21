@@ -393,12 +393,13 @@ export visualvm_jdkhome=$JDK_HOME
     prefix = File.expand_path('ledger', LIB_DIR)
     info_dir = File.expand_path('share/info', prefix)
 
-    FileUtils.rm_rf prefix
-    ensure_directory_exists prefix
-
     in_github_repo 'ledger/ledger' do
       system './acprep', 'update', "--prefix=#{prefix}", '--jobs=3'
       system 'make', 'check' or fail
+
+      FileUtils.rm_rf prefix
+      ensure_directory_exists prefix
+
       system 'make', 'install'
 
       system 'makeinfo', *Dir['doc/*.texi']
@@ -463,13 +464,15 @@ export visualvm_jdkhome=$JDK_HOME
   desc 'watchman', 'install watchman (https://facebook.github.io/watchman)'
   def watchman
     destdir = File.expand_path('watchman', LIB_DIR)
-    FileUtils.rm_rf destdir
-    ensure_directory_exists destdir
 
     in_github_repo 'facebook/watchman' do
       system './autogen.sh'
       system './configure', '--prefix', destdir
       system 'make'
+
+      FileUtils.rm_rf destdir
+      ensure_directory_exists destdir
+
       system 'make', 'install'
     end
   end
