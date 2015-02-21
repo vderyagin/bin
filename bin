@@ -144,6 +144,7 @@ path=(
   "#{LIB_DIR}/heroku-client/bin"
   "#{LIB_DIR}/ledger/bin"
   "#{LIB_DIR}/odeskteam-3.2.13-1-x86_64/usr/bin"
+  "#{LIB_DIR}/visualvm/bin"
   "#{LIB_DIR}/watchman/bin"
   "#{LIB_DIR}/wmutils/usr/bin"
   "#{LIB_DIR}/xiki/bin"
@@ -174,6 +175,8 @@ declare -U fpath
 declare -U infopath
 declare -U manpath
 declare -U path
+
+export visualvm_jdkhome=$JDK_HOME
      EOS
   end
 
@@ -469,6 +472,20 @@ declare -U path
       system './configure', '--prefix', destdir
       system 'make'
       system 'make', 'install'
+    end
+  end
+
+  desc 'visualvm', 'install VisualVM (http://visualvm.java.net)'
+  def visualvm
+    destdir = File.expand_path('visualvm', LIB_DIR)
+
+    download_file SRC['visualvm'], 'visualvm.zip' do |archive|
+      system 'unzip', archive or fail "failed to extract #{archive}"
+
+      FileUtils.rm_rf destdir
+
+      FileUtils.mv Dir['visualvm*/'].first, 'visualvm'
+      FileUtils.mv 'visualvm', destdir
     end
   end
 
