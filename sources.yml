@@ -1,6 +1,6 @@
 copy:            https://copy.com/install/linux/Copy.tgz
 dart:            https://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-linux-x64-release.zip
-exercism:        https://github.com/exercism/cli/releases/download/v1.9.2/exercism-linux-64bit.tgz
+exercism:        https://github.com/exercism/cli/releases/download/v2.0.0/exercism-linux-64bit.tgz
 gcloud:          https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.zip
 git-sync:        https://github.com/simonthum/git-sync.git
 git-wip:         https://github.com/bartman/git-wip.git
