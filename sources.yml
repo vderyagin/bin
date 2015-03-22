@@ -10,7 +10,7 @@ lein:            https://raw.githubusercontent.com/technomancy/leiningen/stable/
 ngrok:           https://api.equinox.io/1/Applications/ap_pJSFC5wQYkAyI0FIVwKYs9h1hW/Updates/Asset/ngrok.zip?os=linux&arch=386&channel=stable
 odeskteam:       https://docs.google.com/uc?export=download&id=0B1NdDtEdfiQpTkRrOFREdTdNcnc
 rockbox:         http://download.rockbox.org/rbutil/linux/RockboxUtility-v1.4.0-64bit.tar.bz2
-sbt:             http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.7/sbt-launch.jar
+sbt:             http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.8/sbt-launch.jar
 sicp:            https://github.com/webframp/sicp-info.git
 visualvm:        https://java.net/projects/visualvm/downloads/download/release138/visualvm_138.zip
 xiki:            https://github.com/trogdoro/xiki.git
